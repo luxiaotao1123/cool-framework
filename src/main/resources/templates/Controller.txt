@@ -1,0 +1,9 @@
+package @{COMPANYNAME}.@{PACKAGENAME}.controller;
+
+import com.core.controller.BaseController;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class @{ENTITYNAME}Controller extends BaseController {
+	
+}

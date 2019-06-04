@@ -1,0 +1,22 @@
+package @{COMPANYNAME}.@{PACKAGENAME}.service.impl;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import com.core.service.impl.@{DAOTYPE}BaseServiceImpl;
+import @{COMPANYNAME}.@{PACKAGENAME}.dao.@{ENTITYNAME}Dao;
+import @{COMPANYNAME}.@{PACKAGENAME}.entity.@{ENTITYNAME};
+import @{COMPANYNAME}.@{PACKAGENAME}.service.@{ENTITYNAME}Service;
+
+@Service("@{SIMPLEENTITYNAME}Service")
+public class @{ENTITYNAME}ServiceImpl extends @{DAOTYPE}BaseServiceImpl<@{ENTITYNAME}> implements @{ENTITYNAME}Service {
+
+	@SuppressWarnings("unused")
+	private @{ENTITYNAME}Dao @{SIMPLEENTITYNAME}Dao;
+	
+	public @{ENTITYNAME}ServiceImpl(@Qualifier("@{SIMPLEENTITYNAME}Dao")@{ENTITYNAME}Dao @{SIMPLEENTITYNAME}Dao) {
+		super(@{SIMPLEENTITYNAME}Dao);
+		this.@{SIMPLEENTITYNAME}Dao=@{SIMPLEENTITYNAME}Dao;
+	}
+
+}

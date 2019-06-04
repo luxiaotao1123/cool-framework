@@ -1,0 +1,8 @@
+package @{COMPANYNAME}.@{PACKAGENAME}.service;
+
+import com.core.service.@{DAOTYPE}BaseService;
+import @{COMPANYNAME}.@{PACKAGENAME}.entity.@{ENTITYNAME};
+
+public interface @{ENTITYNAME}Service extends @{DAOTYPE}BaseService<@{ENTITYNAME}> {
+
+}
