@@ -1,9 +1,14 @@
 package @{COMPANYNAME}.@{PACKAGENAME}.controller;
 
+import @{COMPANYNAME}.@{PACKAGENAME}.service.@{ENTITYNAME}Service;
 import com.core.controller.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class @{ENTITYNAME}Controller extends BaseController {
+
+    @Autowired
+    private @{ENTITYNAME}Service @{SIMPLEENTITYNAME}Service;
 	
 }
