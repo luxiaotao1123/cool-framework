@@ -56,7 +56,7 @@ public class DefaultEntityFactory implements EntityFactory {
                     fieldName = column.value();
                 }
                 tableProperty.setFieldName(fieldName);
-                tableProperty.setFieldType(field.getType());
+                tableProperty.setField(field);
                 properties.add(tableProperty);
             }
             obj.setProperties(properties);

@@ -6,7 +6,6 @@ import com.core.sql.JdbcExecutor;
 import com.core.tools.SnowflakeIdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,20 +34,13 @@ public class SqlBaseDaoImpl<T extends Base> implements SqlBaseDao<T> {
     }
 
     @Override
-    public int persist(T obj) {
-        List<T> objects = new ArrayList<>();
-        objects.add(obj);
-        return jdbcExecutor.persist(objects);
-    }
-
-    @Override
     public int persist(List<T> objs) {
         return jdbcExecutor.persist(objs);
     }
 
     @Override
     public int merge(T entity) {
-        return 0;
+        return jdbcExecutor.merge(entity);
     }
 
 }

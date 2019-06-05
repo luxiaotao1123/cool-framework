@@ -1,5 +1,6 @@
 package com.core.sql;
 
+import com.core.annotation.PrimaryKey;
 import com.core.exception.CoolException;
 import com.core.sql.convert.SqlPatter;
 import com.core.sql.table.TableObject;
@@ -65,9 +66,43 @@ public class JdbcExecutor extends AbstractJdbcManager implements SqlPatter {
         } catch (Exception e){
             throw new CoolException(e.getMessage());
         }
-
     }
 
+    public <T> int merge(T obj){
+        try {
+            if (null == obj) {
+                return 0;
+            }
+            Class<?> cls = obj.getClass();
+            TableObject tableObject = getTableObjectDefault(cls);
+            String tableName = tableObject.getTableName();
+            StringBuilder sb = new StringBuilder();
+            String primaryKey = null;
+            Object primaryKeyVal = null;
+            List<Object> params = new ArrayList<>();
+            for (TableProperty tableProperty : tableObject.getProperties()) {
+                Field field = tableProperty.getField();
+                boolean flag = field.isAccessible();
+                field.setAccessible(true);
+                Object param = field.get(obj);
+                field.setAccessible(flag);
+                if (null != field.getAnnotation(PrimaryKey.class)) {
+                    primaryKey = field.getName();
+                    primaryKeyVal = param;
+                }
+                if (null != param) {
+                    sb.append(tableProperty.getFieldName()).append("=").append(PLACE).append(COMMA);
+                    params.add(param);
+                }
+            }
+            params.add(primaryKeyVal);
+            String substring = sb.toString().substring(0, sb.toString().length() - COMMA.length());
+            String sql = String.format(UPDATE, tableName, substring, primaryKey);
+            return jdbcTemplate.update(sql, params.toArray());
+        }catch (Exception e){
+            throw new CoolException(e.getMessage());
+        }
+    }
 
 
 

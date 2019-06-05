@@ -4,13 +4,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
 
-/**
- * BuildCodeTemplates buildCodeTemplates = new
- * 		 BuildCodeTemplates("com/qianliang", "manager", "creditRuleLog");
- * 		 buildCodeTemplates.buildCodeFile();
- * 模板生成类
- * @author Start
- */
+
 public class BuildCodeTemplates {
 	
 	private String[] FILECODES={"Controller","Service","ServiceImpl","Dao","DaoImpl","Entity"};

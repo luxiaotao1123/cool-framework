@@ -1,5 +1,7 @@
 package com.core.sql.table;
 
+import java.lang.reflect.Field;
+
 /**
  * 表字段
  * Created by vincent on 2019-06-03
@@ -10,14 +12,14 @@ public class TableProperty {
     private String fieldName;
 
     // 字段类型
-    private Class<?> fieldType;
+    private Field field;
 
     public TableProperty() {
     }
 
-    public TableProperty(String fieldName, Class<?> fieldType) {
+    public TableProperty(final String fieldName, final Field field) {
         this.fieldName = fieldName;
-        this.fieldType = fieldType;
+        this.field = field;
     }
 
     public String getFieldName() {
@@ -28,11 +30,11 @@ public class TableProperty {
         this.fieldName = fieldName;
     }
 
-    public Class<?> getFieldType() {
-        return fieldType;
+    public Field getField() {
+        return field;
     }
 
-    public void setFieldType(final Class<?> fieldType) {
-        this.fieldType = fieldType;
+    public void setField(final Field field) {
+        this.field = field;
     }
 }
