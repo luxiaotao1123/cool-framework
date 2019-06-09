@@ -1,8 +1,0 @@
-package @{COMPANYNAME}.@{PACKAGENAME}.dao;
-
-import com.core.dao.@{DAOTYPE}BaseDao;
-import @{COMPANYNAME}.@{PACKAGENAME}.entity.@{ENTITYNAME};
-
-public interface @{ENTITYNAME}Dao extends @{DAOTYPE}BaseDao<@{ENTITYNAME}> {
-
-}

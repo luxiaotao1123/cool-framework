@@ -7,9 +7,9 @@ import java.io.*;
 
 public class BuildCodeTemplates {
 	
-	private String[] FILECODES={"Controller","Service","ServiceImpl","Dao","DaoImpl","Entity"};
+	private String[] FILECODES={"Controller","Service","ServiceImpl","Mapper"};
 	
-	private String[] FILETYPES={"controller","service","service/impl","dao","dao/impl","entity"};
+	private String[] FILETYPES={"controller","service","service/impl","mapper"};
 	/**
 	 * 包路径
 	 */
@@ -58,21 +58,15 @@ public class BuildCodeTemplates {
 			 */
 			StringBuilder txtContentBuilder=new StringBuilder();
 			ClassPathResource classPath=new ClassPathResource("templates/"+FILECODES[i]+".txt");
-			
-			BufferedReader reader =new BufferedReader(new InputStreamReader(classPath.getInputStream()));
-	        try {
-	        	/**
-	        	 * 每一行文本的内容
-	        	 */
-	        	String lineContent;
-	            while((lineContent=reader.readLine())!=null){
-	            	txtContentBuilder.append(lineContent).append("\n");
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }finally{
-	        	reader.close();
-	        }
+
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(classPath.getInputStream()))) {
+				String lineContent;
+				while ((lineContent = reader.readLine()) != null) {
+					txtContentBuilder.append(lineContent).append("\n");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	        String types=FILETYPES[i];
 	        writerFile(txtContentBuilder.toString(),types,FILECODES[i]);
 		}
@@ -99,20 +93,20 @@ public class BuildCodeTemplates {
 			/**
 			 * 表的前缀默认取包名的前三位
 			 */
-			String tabHeader=new String();
+			String tabHeader;
 			if(packageName.length()>3){
 				tabHeader=packageName.substring(0,3);
 			}else{
 				tabHeader=packageName;
 			}
 			content=content.
-				replaceAll("@\\{PACKAGENAME\\}",packageName).					//包
-				replaceAll("@\\{ENTITYNAME\\}", fullEntityName).			 	//实体
-				replaceAll("@\\{SIMPLEENTITYNAME\\}", simpleEntityName). 		//实体简写
-				replaceAll("@\\{UENTITYNAME\\}", simpleEntityName).	//实体大字
-				replaceAll("@\\{TABEXTESION\\}",tabHeader).						//实体数据表前缀
-				replaceAll("@\\{DAOTYPE\\}",this.type.name()).						//类型
-				replaceAll("@\\{COMPANYNAME\\}",packagepath.replace("/", "."));	//实体数据表前缀
+				replaceAll("@\\{PACKAGENAME}",packageName).					//包
+				replaceAll("@\\{ENTITYNAME}", fullEntityName).			 	//实体
+				replaceAll("@\\{SIMPLEENTITYNAME}", simpleEntityName). 		//实体简写
+				replaceAll("@\\{UENTITYNAME}", simpleEntityName).	//实体大字
+				replaceAll("@\\{TABEXTESION}",tabHeader).						//实体数据表前缀
+				replaceAll("@\\{DAOTYPE}",this.type.name()).						//类型
+				replaceAll("@\\{COMPANYNAME}",packagepath.replace("/", "."));	//实体数据表前缀
 			writerFile.createNewFile();
 			BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
 			writer.write(content);
@@ -123,10 +117,10 @@ public class BuildCodeTemplates {
 			System.out.println(fullEntityName+fileCode+".java  源文件已经存在创建失败！");
 		}
 	}
-	
+
 	public enum DaoType{
 		Sql
 		;
 	}
-	
+
 }

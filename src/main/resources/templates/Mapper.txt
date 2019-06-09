@@ -1,0 +1,8 @@
+package @{COMPANYNAME}.@{PACKAGENAME}.dao;
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import @{COMPANYNAME}.@{PACKAGENAME}.entity.@{ENTITYNAME};
+
+public interface @{ENTITYNAME}Mapper extends BaseMapper<@{ENTITYNAME}> {
+
+}

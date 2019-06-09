@@ -3,20 +3,19 @@ package @{COMPANYNAME}.@{PACKAGENAME}.service.impl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.core.service.impl.@{DAOTYPE}BaseServiceImpl;
-import @{COMPANYNAME}.@{PACKAGENAME}.dao.@{ENTITYNAME}Dao;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import @{COMPANYNAME}.@{PACKAGENAME}.dao.@{ENTITYNAME}Mapper;
 import @{COMPANYNAME}.@{PACKAGENAME}.entity.@{ENTITYNAME};
 import @{COMPANYNAME}.@{PACKAGENAME}.service.@{ENTITYNAME}Service;
 
 @Service("@{SIMPLEENTITYNAME}Service")
-public class @{ENTITYNAME}ServiceImpl extends @{DAOTYPE}BaseServiceImpl<@{ENTITYNAME}> implements @{ENTITYNAME}Service {
+public class @{ENTITYNAME}ServiceImpl extends ServiceImpl<@{ENTITYNAME}Mapper, @{ENTITYNAME}> implements @{ENTITYNAME}Service {
 
 	@SuppressWarnings("unused")
-	private @{ENTITYNAME}Dao @{SIMPLEENTITYNAME}Dao;
+	private @{ENTITYNAME}Mapper @{SIMPLEENTITYNAME}Mapper;
 	
-	public @{ENTITYNAME}ServiceImpl(@Qualifier("@{SIMPLEENTITYNAME}Dao")@{ENTITYNAME}Dao @{SIMPLEENTITYNAME}Dao) {
-		super(@{SIMPLEENTITYNAME}Dao);
-		this.@{SIMPLEENTITYNAME}Dao=@{SIMPLEENTITYNAME}Dao;
+	public @{ENTITYNAME}ServiceImpl(@Qualifier("@{SIMPLEENTITYNAME}Mapper")@{ENTITYNAME}Mapper @{SIMPLEENTITYNAME}Dao) {
+		this.@{SIMPLEENTITYNAME}Mapper=@{SIMPLEENTITYNAME}Mapper;
 	}
 
 }
