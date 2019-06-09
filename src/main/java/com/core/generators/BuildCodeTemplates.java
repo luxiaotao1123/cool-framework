@@ -7,9 +7,13 @@ import java.io.*;
 
 public class BuildCodeTemplates {
 	
-	private String[] FILECODES={"Controller","Service","ServiceImpl","Mapper"};
-	
-	private String[] FILETYPES={"controller","service","service/impl","mapper"};
+//	private String[] FILECODES={"Controller","Service","ServiceImpl","Mapper"};
+//
+//	private String[] FILETYPES={"controller","service","service/impl","mapper"};
+
+	private String[] FILECODES={"Controller"};
+
+	private String[] FILETYPES={"controller"};
 	/**
 	 * 包路径
 	 */
