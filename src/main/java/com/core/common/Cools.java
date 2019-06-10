@@ -46,4 +46,8 @@ public class Cools {
         return false;
     }
 
+    public static int sqlLimitIndex(Integer pageIndex, Integer pageSize){
+        return (pageIndex - 1) * pageSize;
+    }
+
 }
