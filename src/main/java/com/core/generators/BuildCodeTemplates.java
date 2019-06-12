@@ -11,17 +11,13 @@ public class BuildCodeTemplates {
 //
 //	private String[] FILETYPES={"controller","service","service/impl","mapper"};
 
-	private String[] FILECODES={"Controller"};
+	private String[] FILECODES={"Controller","Mapper"};
 
-	private String[] FILETYPES={"controller"};
+	private String[] FILETYPES={"controller","dao"};
 	/**
 	 * 包路径
 	 */
 	private String packagepath;
-	/**
-	 * 包名全小写
-	 */
-	private String packageName;
 	/**
 	 * 完整的实体名,首字母大写
 	 */
@@ -33,16 +29,12 @@ public class BuildCodeTemplates {
 	
 	private DaoType type;
 
-	public BuildCodeTemplates(String packagepath, String packageName, String entityName){
-		this(packagepath, packageName, entityName, DaoType.Sql);
+	public BuildCodeTemplates(String packagepath, String entityName){
+		this(packagepath, entityName, DaoType.Sql);
 	}
 	
-	public BuildCodeTemplates(String packagepath, String packageName, String entityName, DaoType type){
+	public BuildCodeTemplates(String packagepath, String entityName, DaoType type){
 		this.packagepath=packagepath;
-		/**
-		 * 默认包名为小写顾全转为小写
-		 */
-		this.packageName=packageName.toLowerCase();
 		/**
 		 * 把实体名首字母转为大写
 		 */
@@ -83,7 +75,7 @@ public class BuildCodeTemplates {
 	 * 所属的层类型
 	 */
 	private void writerFile(String content, String builderType, String fileCode) throws IOException{
-		String directory="src/main/java/"+packagepath+"/"+packageName+"/"+builderType.toLowerCase()+"/";
+		String directory="src/main/java/"+packagepath.replace(".", "/")+"/"+builderType.toLowerCase()+"/";
 		/**
 		 * 目录不存在则创建
 		 */
@@ -94,23 +86,12 @@ public class BuildCodeTemplates {
 		if(fileCode.equals("Entity"))fileCode="";
 		File writerFile=new File(directory+fullEntityName+fileCode+".java");
 		if(!writerFile.exists()){
-			/**
-			 * 表的前缀默认取包名的前三位
-			 */
-			String tabHeader;
-			if(packageName.length()>3){
-				tabHeader=packageName.substring(0,3);
-			}else{
-				tabHeader=packageName;
-			}
 			content=content.
-				replaceAll("@\\{PACKAGENAME}",packageName).					//包
 				replaceAll("@\\{ENTITYNAME}", fullEntityName).			 	//实体
 				replaceAll("@\\{SIMPLEENTITYNAME}", simpleEntityName). 		//实体简写
 				replaceAll("@\\{UENTITYNAME}", simpleEntityName).	//实体大字
-				replaceAll("@\\{TABEXTESION}",tabHeader).						//实体数据表前缀
 				replaceAll("@\\{DAOTYPE}",this.type.name()).						//类型
-				replaceAll("@\\{COMPANYNAME}",packagepath.replace("/", "."));	//实体数据表前缀
+				replaceAll("@\\{COMPANYNAME}",packagepath);	//实体数据表前缀
 			writerFile.createNewFile();
 			BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
 			writer.write(content);
