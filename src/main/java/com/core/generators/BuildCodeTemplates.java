@@ -34,6 +34,7 @@ public class BuildCodeTemplates {
 	}
 	
 	public BuildCodeTemplates(String packagepath, String entityName, DaoType type){
+		entityName = getRuleName(entityName);
 		this.packagepath=packagepath;
 		/**
 		 * 把实体名首字母转为大写
@@ -46,7 +47,21 @@ public class BuildCodeTemplates {
 		
 		this.type=type;
 	}
-	
+
+	private String getRuleName(String param){
+		StringBuilder name = new StringBuilder();
+		int idx = 0;
+		for (String s : param.split("_")){
+			String newStr = s;
+			if (idx != 0){
+				newStr = s.substring(0, 1).toUpperCase() + s.substring(1);
+			}
+			name.append(newStr);
+			idx++;
+		}
+		return name.toString();
+	}
+
 	public void buildCodeFile() throws IOException{
 		for(int i=0;i<FILETYPES.length;i++){
 			/**
