@@ -1,0 +1,14 @@
+package @{COMPANYNAME}.entity;
+
+@{ENTITYIMPORT}
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
+
+@TableName("@{TABLENAME}")
+public class @{ENTITYNAME} implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+@{ENTITYCONTENT}
+
+}

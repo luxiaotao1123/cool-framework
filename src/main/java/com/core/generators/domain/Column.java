@@ -11,11 +11,13 @@ public class Column {
     private String type;
     private String comment;
     private String humpName;
+    private boolean primaryKey;
 
-    public Column(String name, String type, String comment) {
+    public Column(String name, String type, String comment, boolean primaryKey) {
         this.name = name;
         this.type = type;
         this.comment = comment;
+        this.primaryKey = primaryKey;
         this.humpName = GeneratorUtils._convert(name);
     }
 
@@ -47,6 +49,14 @@ public class Column {
         return humpName;
     }
 
+    public boolean isPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(boolean primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
     @Override
     public String toString() {
         return "Column{" +
@@ -54,6 +64,7 @@ public class Column {
                 ", type='" + type + '\'' +
                 ", comment='" + comment + '\'' +
                 ", humpName='" + humpName + '\'' +
+                ", primaryKey=" + primaryKey +
                 '}';
     }
 }
