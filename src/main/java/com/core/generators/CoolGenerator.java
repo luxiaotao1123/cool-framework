@@ -1,5 +1,6 @@
 package com.core.generators;
 
+import com.core.common.Cools;
 import com.core.generators.domain.Column;
 import com.core.generators.utils.GeneratorUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -99,7 +100,7 @@ public class CoolGenerator {
                         .append("\n");
             }
 
-            // 命名转换
+            // 命名转换注解
             if (!column.getName().equals(column.getHumpName())){
                 if (setTableField){
                     entityIm.append("import com.baomidou.mybatisplus.annotations.TableField;").append("\n");
@@ -111,6 +112,17 @@ public class CoolGenerator {
                         .append("\")")
                         .append("\n");
             }
+
+            // 注释
+            if (!Cools.isEmpty(column.getComment())){
+                sb.append("    /**\n")
+                        .append("     * ")
+                        .append(column.getComment())
+                        .append("\n")
+                        .append("     */")
+                        .append("\n");
+            }
+
             sb.append("    ")
                     .append("private ")
                     .append(column.getType())
@@ -217,6 +229,7 @@ public class CoolGenerator {
                         resultSet.getString("Key").equals("PRI")));
             }
         }
+        columns.forEach(column -> System.out.println(column.toString()));
     }
 
 
