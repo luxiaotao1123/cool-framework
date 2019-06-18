@@ -20,12 +20,11 @@ public class CoolGenerator {
             "ServiceImpl",
             "Mapper"};
 
-    public String dataBase = "cool";
-    public String host = "localhost:3306";
-    public String username = "root";
-    public String password = "xltys1995";
-    public String table = "sys_user";
-    public String packagePath = "com.demo";
+    public String url;
+    public String username;
+    public String password;
+    public String table;
+    public String packagePath;
     private List<Column> list = new ArrayList<>();
     private boolean controller = true;
     private boolean service = true;
@@ -109,7 +108,7 @@ public class CoolGenerator {
 
     private void gainDbInfo() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+"/" + dataBase, username, password);
+        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
 
         PreparedStatement ps = conn.prepareStatement("select * from " + table);
         ResultSetMetaData meta = ps.executeQuery().getMetaData();
