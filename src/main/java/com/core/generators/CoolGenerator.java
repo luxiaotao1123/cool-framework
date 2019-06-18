@@ -268,7 +268,7 @@ public class CoolGenerator {
                         resultSet.getString("Key").equals("PRI")));
             }
         }
-        columns.forEach(column -> System.out.println(column.toString()));
+//        columns.forEach(column -> System.out.println(column.toString()));
     }
 
 
