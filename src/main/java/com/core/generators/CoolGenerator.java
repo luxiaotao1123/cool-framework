@@ -15,54 +15,80 @@ import java.util.List;
  */
 public class CoolGenerator {
 
+    private static final String BASE_DIR="src/main/";
+    private static final String JAVA_DIR = BASE_DIR + "java/";
+    private static final String XML_DIR = BASE_DIR + "resources/mapper/";
     private static final String[] ALL_TEMPLATES = new String[]{
             "Controller",
             "Service",
             "ServiceImpl",
             "Mapper",
-            "Entity"};
+            "Entity",
+            "Xml"};
 
     public String url;
     public String username;
     public String password;
     public String table;
     public String packagePath;
+    public boolean controller = true;
+    public boolean service = true;
+    public boolean mapper = true;
+    public boolean entity = true;
+    public boolean xml = true;
+
     private List<Column> columns = new ArrayList<>();
-    private boolean controller = true;
-    private boolean service = true;
-    private boolean mapper = true;
-    private boolean entity = true;
     private String fullEntityName;
     private String simpleEntityName;
     private String entityImport;
     private String entityContent;
+    private String xmlContent;
 
     public void build() throws Exception {
         init();
         for (String template : ALL_TEMPLATES){
             boolean pass = false;
+            String lowerCase = template.toLowerCase();
+            String templatePath = lowerCase.contains("impl")?lowerCase.substring(0,lowerCase.length()-4)+"/"+lowerCase.substring(lowerCase.length()-4):lowerCase;
+            String directory="";
+            String fileName="";
             switch (template){
                 case "Controller":
                     pass = controller;
+                    directory = JAVA_DIR + packagePath.replace(".", "/")+"/"+templatePath+"/";
+                    fileName = fullEntityName+template+".java";
                     break;
                 case "Service":
                     pass = service;
+                    directory = JAVA_DIR + packagePath.replace(".", "/")+"/"+templatePath+"/";
+                    fileName = fullEntityName+template+".java";
                     break;
                 case "ServiceImpl":
                     pass = service;
+                    directory = JAVA_DIR + packagePath.replace(".", "/")+"/"+templatePath+"/";
+                    fileName = fullEntityName+template+".java";
                     break;
                 case "Mapper":
                     pass = mapper;
+                    directory = JAVA_DIR + packagePath.replace(".", "/")+"/"+templatePath+"/";
+                    fileName = fullEntityName+template+".java";
                     break;
                 case "Entity":
                     pass = entity;
+                    directory = JAVA_DIR + packagePath.replace(".", "/")+"/"+templatePath+"/";
+                    fileName = fullEntityName+".java";
+                    break;
+                case "Xml":
+                    pass = xml;
+                    directory = XML_DIR;
+                    fileName = fullEntityName+"Mapper.xml";
                     break;
                 default:
                     break;
             }
             if (!pass){ continue; }
             String content = readFile(template);
-            writerFile(content, template);
+            writeFile(content, directory, fileName, template);
         }
     }
 
@@ -71,6 +97,7 @@ public class CoolGenerator {
         fullEntityName = GeneratorUtils.getNameSpace(table);
         simpleEntityName = fullEntityName.substring(0, 1).toLowerCase()+fullEntityName.substring(1);
         entityContent = createEntityMsg();
+        xmlContent = createXmlMsg();
     }
 
     // java entity 字段遍历修饰
@@ -166,6 +193,21 @@ public class CoolGenerator {
         return sb.toString();
     }
 
+    private String createXmlMsg(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            sb.append("        ")
+                    .append("<")
+                    .append(column.isPrimaryKey()?"id":"result")
+                    .append(" column=\"")
+                    .append(column.getName())
+                    .append("\" property=\"")
+                    .append(column.getHumpName())
+                    .append("\" />\n");
+        }
+        return sb.toString();
+    }
+
     private String readFile(String template){
         StringBuilder txtContentBuilder=new StringBuilder();
         ClassPathResource classPath=new ClassPathResource("templates/"+template + ".txt");
@@ -181,16 +223,12 @@ public class CoolGenerator {
         return txtContentBuilder.toString();
     }
 
-    private void writerFile(String content, String template) throws IOException {
-        String lowerCase = template.toLowerCase();
-        String templatePath = lowerCase.contains("impl")?lowerCase.substring(0,lowerCase.length()-4)+"/"+lowerCase.substring(lowerCase.length()-4):lowerCase;
-        String directory="src/main/java/"+packagePath.replace(".", "/")+"/"+templatePath+"/";
+    private void writeFile(String content, String directory, String fileName, String template) throws IOException {
         File codeDirectory=new File(directory);
         if(!codeDirectory.exists()){
             codeDirectory.mkdirs();
         }
-        if (template.equals("Entity")) template="";
-        File writerFile=new File(directory+fullEntityName+template+".java");
+        File writerFile=new File(directory+fileName);
         if(!writerFile.exists()){
             content=content.
                     replaceAll("@\\{TABLENAME}", table).
@@ -199,7 +237,8 @@ public class CoolGenerator {
                     replaceAll("@\\{ENTITYNAME}", fullEntityName).			 	//实体
                     replaceAll("@\\{SIMPLEENTITYNAME}", simpleEntityName). 		//实体简写
                     replaceAll("@\\{UENTITYNAME}", simpleEntityName).	//实体大字
-                    replaceAll("@\\{COMPANYNAME}",packagePath);	//实体数据表前缀
+                    replaceAll("@\\{COMPANYNAME}",packagePath).	//实体数据表前缀
+                    replaceAll("@\\{XMLCONTENT}", xmlContent);
             writerFile.createNewFile();
             BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
             writer.write(content);
