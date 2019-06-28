@@ -24,12 +24,12 @@ public class @{ENTITYNAME}Controller {
     }
 
     @RequestMapping("/@{SIMPLEENTITYNAME}_add")
-    public String index(){
+    public String add(){
         return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_add";
     }
 
     @RequestMapping("/@{SIMPLEENTITYNAME}_detail")
-    public String index(){
+    public String detail(){
         return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_detail";
     }
 
