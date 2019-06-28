@@ -13,38 +13,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/@{SIMPLEENTITYNAME}")
 public class @{ENTITYNAME}Controller {
 
     @Autowired
     private @{ENTITYNAME}Service @{SIMPLEENTITYNAME}Service;
 
-    @RequestMapping("")
+    @RequestMapping("/@{SIMPLEENTITYNAME}")
     public String index(){
         return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}";
     }
 
-    @RequestMapping(value = "/{id}/auth")
+    @RequestMapping("/@{SIMPLEENTITYNAME}_add")
+    public String index(){
+        return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_add";
+    }
+
+    @RequestMapping("/@{SIMPLEENTITYNAME}_detail")
+    public String index(){
+        return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_detail";
+    }
+
+    @RequestMapping(value = "/@{SIMPLEENTITYNAME}/{id}/auth")
     @ResponseBody
     public R get(@PathVariable("id") Long id) {
         return R.ok(@{SIMPLEENTITYNAME}Service.selectById(String.valueOf(id)));
     }
 
-    @RequestMapping(value = "list/auth")
+    @RequestMapping(value = "/@{SIMPLEENTITYNAME}/list/auth")
     @ResponseBody
     public R list(@RequestParam(defaultValue = "1")Integer curr,
                   @RequestParam(defaultValue = "10")Integer limit){
         return R.ok(@{SIMPLEENTITYNAME}Service.selectPage(new Page<>(curr, limit)));
     }
 
-    @RequestMapping(value = "/add/auth")
+    @RequestMapping(value = "/@{SIMPLEENTITYNAME}/add/auth")
     @ResponseBody
     public R add(@{ENTITYNAME} @{SIMPLEENTITYNAME}) {
         @{SIMPLEENTITYNAME}Service.insert(@{SIMPLEENTITYNAME});
         return R.ok();
     }
 
-	@RequestMapping(value = "/update/auth")
+	@RequestMapping(value = "/@{SIMPLEENTITYNAME}/update/auth")
     @ResponseBody
     public R update(@{ENTITYNAME} @{SIMPLEENTITYNAME}){
         if (Cools.isEmpty(@{SIMPLEENTITYNAME}) || null==@{SIMPLEENTITYNAME}.getId()){
