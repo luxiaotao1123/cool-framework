@@ -50,4 +50,26 @@ public class Cools {
         return (pageIndex - 1) * pageSize;
     }
 
+    public static String enToken(String username, String password){
+        return AesUtils.encrypt(username, zerofill(password, 16));
+    }
+
+    public static String deTokn(String token, String password){
+        return AesUtils.decrypt(token, zerofill(password, 16));
+    }
+
+    public static String zerofill(String msg, Integer count){
+        if (msg.length() == count){
+            return msg;
+        } else if (msg.length() > count){
+            return msg.substring(0, 16);
+        } else {
+            StringBuilder msgBuilder = new StringBuilder(msg);
+            for (int i = 0; i<count-msg.length(); i++){
+                msgBuilder.append("0");
+            }
+            return msgBuilder.toString();
+        }
+    }
+
 }
