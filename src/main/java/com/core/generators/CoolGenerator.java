@@ -15,16 +15,19 @@ import java.util.List;
  */
 public class CoolGenerator {
 
-    private static final String BASE_DIR="src/main/";
+    private static final String BASE_DIR = "src/main/";
     private static final String JAVA_DIR = BASE_DIR + "java/";
     private static final String XML_DIR = BASE_DIR + "resources/mapper/";
+    private static final String HTML_DIR = BASE_DIR + "webapp/";
     private static final String[] ALL_TEMPLATES = new String[]{
             "Controller",
             "Service",
             "ServiceImpl",
             "Mapper",
             "Entity",
-            "Xml"};
+            "Xml",
+            "Html",
+            "Js"};
 
     public String url;
     public String username;
@@ -36,6 +39,8 @@ public class CoolGenerator {
     public boolean mapper = true;
     public boolean entity = true;
     public boolean xml = true;
+    public boolean html = true;
+    public boolean js = true;
 
     private List<Column> columns = new ArrayList<>();
     private String fullEntityName;
@@ -82,6 +87,16 @@ public class CoolGenerator {
                     pass = xml;
                     directory = XML_DIR;
                     fileName = fullEntityName+"Mapper.xml";
+                    break;
+                case "Html":
+                    pass = html;
+                    directory = HTML_DIR + "/view/" + simpleEntityName + "/";
+                    fileName = simpleEntityName+".html";
+                    break;
+                case "Js":
+                    pass = js;
+                    directory = HTML_DIR + "/static/js/" + simpleEntityName + "/";
+                    fileName = simpleEntityName+".js";
                     break;
                 default:
                     break;
@@ -193,6 +208,9 @@ public class CoolGenerator {
         return sb.toString();
     }
 
+    /**
+     * xml 字段修饰
+     */
     private String createXmlMsg(){
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
