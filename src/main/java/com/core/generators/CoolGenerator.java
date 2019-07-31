@@ -380,7 +380,7 @@ public class CoolGenerator {
             if (column.isPrimaryKey()){ continue;}
             sb.append("            ")
                     .append(column.getHumpName())
-                    .append(": $('#")
+                    .append(": \\$('#")
                     .append(column.getHumpName())
                     .append("').val(),\n");
         }
