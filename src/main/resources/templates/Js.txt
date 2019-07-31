@@ -19,12 +19,7 @@ layui.config({
         cellMinWidth: 50,
         cols: [[
             {type: 'checkbox', fixed: 'left'}
-            ,{field: 'id', title: 'ID', sort: true,align: 'center', fixed: 'left', width: 80}
-            ,{field: 'username', align: 'center',title: '用户名'}
-            ,{field: 'mobile',align: 'center', title: '联系方式'}
-            ,{field: 'createTime',align: 'center', title: '注册时间', sort: true}
-            ,{field: 'status', align: 'center',title: '状态', sort: true}
-            ,{fixed: 'right', title:'操作', align: 'center', toolbar: '#operate', width:150}
+            // 待添加
         ]],
         request: {
             pageName: 'curr',
@@ -145,10 +140,7 @@ layui.config({
             shade: [0.5,'#000'] //0.1透明度的背景
         });
         var data = {
-            username: $('#username').val(),
-            mobile: $('#mobile').val(),
-            password: $('#password').val(),
-            status: $('#status').val()
+            // 待添加
         };
         $.ajax({
             url: store.uri + "/@{SIMPLEENTITYNAME}/add/auth",
