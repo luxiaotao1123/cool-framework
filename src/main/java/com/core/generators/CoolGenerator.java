@@ -151,9 +151,9 @@ public class CoolGenerator {
             writer.write(content);
             writer.flush();
             writer.close();
-            System.out.println(fullEntityName+template+".java 源文件创建成功！");
+            System.out.println(fullEntityName+template+" 源文件创建成功！");
         }else{
-            System.out.println(fullEntityName+template+".java  源文件已经存在创建失败！");
+            System.out.println(fullEntityName+template+" 源文件已经存在创建失败！");
         }
     }
 
@@ -179,21 +179,32 @@ public class CoolGenerator {
     }
 
 
-    public void setController(boolean controller) {
-        this.controller = controller;
-    }
 
-    public void setService(boolean service) {
-        this.service = service;
-    }
 
-    public void setMapper(boolean mapper) {
-        this.mapper = mapper;
-    }
 
-    public void setEntity(final boolean entity) {
-        this.entity = entity;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**********************************************************************************************/
