@@ -75,6 +75,22 @@ public class Column {
         return comment;
     }
 
+    public String getWholeComment() {
+        if (!Cools.isEmpty(this.enums)){
+            StringBuilder sb = new StringBuilder(" ");
+            for (Map<String, Object> val : enums){
+                for (Map.Entry<String, Object> entry : val.entrySet()){
+                    sb.append(entry.getKey())
+                            .append(": ")
+                            .append(entry.getValue())
+                            .append("  ");
+                }
+            }
+            return comment + sb.toString();
+        }
+        return comment;
+    }
+
     public void setComment(final String comment) {
         this.comment = comment;
     }

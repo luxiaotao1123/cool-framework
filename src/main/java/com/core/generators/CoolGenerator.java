@@ -9,6 +9,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vincent on 2019-06-18
@@ -51,6 +52,7 @@ public class CoolGenerator {
     private String htmlContent;
     private String jsTableContent;
     private String jsDetailContent;
+    private String jsEnumContent;
 
     public void build() throws Exception {
         init();
@@ -119,6 +121,7 @@ public class CoolGenerator {
         htmlContent = createHtmlMsg();
         jsTableContent = createJsTableMsg();
         jsDetailContent = createJsDetailMsg();
+        jsEnumContent = createJsEnumMsg();
     }
 
     private String readFile(String template){
@@ -155,6 +158,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{HTMLCONTENT}", htmlContent)
                     .replaceAll("@\\{JSTABLECONTENT}", jsTableContent)
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
+                    .replaceAll("@\\{JSENUMCONTENT}", jsEnumContent)
             ;
             writerFile.createNewFile();
             BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
@@ -235,6 +239,17 @@ public class CoolGenerator {
             if (column.getType().equals("Date")){
                 entityIm.append("import java.util.Date;").append("\n");
             }
+
+            // 注释
+            if (!Cools.isEmpty(column.getComment())){
+                sb.append("    /**\n")
+                        .append("     * ")
+                        .append(column.getWholeComment())
+                        .append("\n")
+                        .append("     */")
+                        .append("\n");
+            }
+
             // 主键修饰
             if (column.isPrimaryKey()){
                 if (setTableId){
@@ -259,16 +274,6 @@ public class CoolGenerator {
                         .append("@TableField(\"")
                         .append(column.getName())
                         .append("\")")
-                        .append("\n");
-            }
-
-            // 注释
-            if (!Cools.isEmpty(column.getComment())){
-                sb.append("    /**\n")
-                        .append("     * ")
-                        .append(column.getComment())
-                        .append("\n")
-                        .append("     */")
                         .append("\n");
             }
 
@@ -386,6 +391,31 @@ public class CoolGenerator {
                     .append(": \\$('#")
                     .append(column.getHumpName())
                     .append("').val(),\n");
+        }
+        return sb.toString();
+    }
+
+    private String createJsEnumMsg(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            if (!Cools.isEmpty(column.getEnums())){
+                sb.append("    \\$(\"[data-field='")
+                        .append(column.getHumpName())
+                        .append("']\").children().each(function(){\n");
+                for (Map<String, Object> map : column.getEnums()){
+                    for (Map.Entry<String, Object> entry : map.entrySet()){
+                        sb.append("        if($(this).text()==='")
+                                .append(entry.getKey())
+                                .append("'){\n")
+                                .append("            $(this).text(\"")
+                                .append(entry.getValue())
+                                .append("\")\n")
+                                .append("        }\n");
+                    }
+                }
+                sb.append("    });\n");
+            }
         }
         return sb.toString();
     }
