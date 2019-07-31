@@ -365,9 +365,9 @@ public class CoolGenerator {
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
-            sb.append(",{field: '")
+            sb.append("            ,{field: '")
                     .append(column.getHumpName())
-                    .append(", align: 'center',title: '")
+                    .append("', align: 'center',title: '")
                     .append(column.getComment())
                     .append("'}\n");
         }

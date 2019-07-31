@@ -20,7 +20,7 @@ layui.config({
         cols: [[
             {type: 'checkbox', fixed: 'left'}
             ,{field: 'id', title: 'ID', sort: true,align: 'center', fixed: 'left', width: 80}
-            @{JSTABLECONTENT}
+@{JSTABLECONTENT}
             ,{fixed: 'right', title:'操作', align: 'center', toolbar: '#operate', width:150}
         ]],
         request: {
@@ -142,7 +142,6 @@ layui.config({
             shade: [0.5,'#000'] //0.1透明度的背景
         });
         var data = {
-            @{JSDETAILCONTENT}
         };
         $.ajax({
             url: store.uri + "/@{SIMPLEENTITYNAME}/add/auth",
