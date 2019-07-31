@@ -36,7 +36,7 @@ public class @{ENTITYNAME}Controller {
                   @{ENTITYNAME} @{SIMPLEENTITYNAME}){
         EntityWrapper<@{ENTITYNAME}> wrapper = new EntityWrapper<>();
         wrapper.setEntity(@{SIMPLEENTITYNAME});
-        return R.ok(@{SIMPLEENTITYNAME}Service.selectPage(new Page<>(curr, limit)));
+        return R.ok(@{SIMPLEENTITYNAME}Service.selectPage(new Page<>(curr, limit), wrapper));
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/add/auth")
