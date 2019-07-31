@@ -378,7 +378,8 @@ public class CoolGenerator {
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
-            sb.append(column.getHumpName())
+            sb.append("            ")
+                    .append(column.getHumpName())
                     .append(": $('#")
                     .append(column.getHumpName())
                     .append("').val(),\n");
