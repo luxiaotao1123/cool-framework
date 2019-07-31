@@ -405,10 +405,10 @@ public class CoolGenerator {
                         .append("']\").children().each(function(){\n");
                 for (Map<String, Object> map : column.getEnums()){
                     for (Map.Entry<String, Object> entry : map.entrySet()){
-                        sb.append("        if($(this).text()==='")
+                        sb.append("        if(\\$(this).text()==='")
                                 .append(entry.getKey())
                                 .append("'){\n")
-                                .append("            $(this).text(\"")
+                                .append("            \\$(this).text(\"")
                                 .append(entry.getValue())
                                 .append("\")\n")
                                 .append("        }\n");

@@ -195,14 +195,7 @@ function tableReload(data) {
 }
 
 function enumConvert() {
-    $("[data-field='status']").children().each(function(){
-        if($(this).text()==='1'){
-            $(this).text("有效")
-        }
-        if($(this).text()==='2'){
-            $(this).text("失效")
-        }
-    });
+@{JSENUMCONTENT}
 }
 
 function setFormVal(el, data) {
