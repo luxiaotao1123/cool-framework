@@ -179,11 +179,14 @@ public class CoolGenerator {
         for (int i = 1; i < count + 1; i++) {
             String columnName = meta.getColumnName(i);
             if (resultSet.next() && columnName.equals(resultSet.getString("Field"))){
-                columns.add(new Column(meta.getColumnName(i),
+                columns.add(new Column(
+                        meta.getColumnName(i),
                         GeneratorUtils.getType(meta.getColumnType(i)),
                         resultSet.getString("Comment"),
-                        resultSet.getString("Key").equals("PRI")));
+                        resultSet.getString("Key").equals("PRI")
+                ));
             }
+            columns.forEach(column -> System.out.println(column.toString()));
         }
     }
 
