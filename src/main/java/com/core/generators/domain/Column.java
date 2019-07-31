@@ -7,11 +7,11 @@ import com.core.generators.utils.GeneratorUtils;
  */
 public class Column {
 
-    private String name;
-    private String type;
-    private String comment;
-    private String humpName;
-    private boolean primaryKey;
+    private String name; // 表字段名
+    private String type; // 类型
+    private String comment; // 备注
+    private String humpName; // 小驼峰
+    private boolean primaryKey; // 主键
 
     public Column(String name, String type, String comment, boolean primaryKey) {
         this.name = name;

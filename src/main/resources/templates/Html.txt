@@ -47,7 +47,7 @@
 <!-- 详情 -->
 <div id="data-add" class="layer_self_wrap" style="width:500px;display:none;">
     <form id="detail" class="layui-form">
-        <!-- 待添加 -->
+@{HTMLCONTENT}
         <div class="layui-form-item">
             <a type="button" class="layui-btn btn-submit" lay-submit lay-filter="add">添加</a>
         </div>

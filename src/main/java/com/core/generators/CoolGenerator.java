@@ -48,6 +48,9 @@ public class CoolGenerator {
     private String entityImport;
     private String entityContent;
     private String xmlContent;
+    private String htmlContent;
+    private String jsTableContent;
+    private String jsDetailContent;
 
     public void build() throws Exception {
         init();
@@ -113,6 +116,9 @@ public class CoolGenerator {
         simpleEntityName = fullEntityName.substring(0, 1).toLowerCase()+fullEntityName.substring(1);
         entityContent = createEntityMsg();
         xmlContent = createXmlMsg();
+        htmlContent = createHtmlMsg();
+        jsTableContent = createJsTableMsg();
+        jsDetailContent = createJsDetailMsg();
     }
 
     private String readFile(String template){
@@ -138,14 +144,18 @@ public class CoolGenerator {
         File writerFile=new File(directory+fileName);
         if(!writerFile.exists()){
             content=content.
-                    replaceAll("@\\{TABLENAME}", table).
-                    replaceAll("@\\{ENTITYIMPORT}", entityImport).
-                    replaceAll("@\\{ENTITYCONTENT}", entityContent).
-                    replaceAll("@\\{ENTITYNAME}", fullEntityName).			 	//实体
-                    replaceAll("@\\{SIMPLEENTITYNAME}", simpleEntityName). 		//实体简写
-                    replaceAll("@\\{UENTITYNAME}", simpleEntityName).	//实体大字
-                    replaceAll("@\\{COMPANYNAME}",packagePath).	//实体数据表前缀
-                    replaceAll("@\\{XMLCONTENT}", xmlContent);
+                    replaceAll("@\\{TABLENAME}", table)
+                    .replaceAll("@\\{ENTITYIMPORT}", entityImport)
+                    .replaceAll("@\\{ENTITYCONTENT}", entityContent)
+                    .replaceAll("@\\{ENTITYNAME}", fullEntityName)
+                    .replaceAll("@\\{SIMPLEENTITYNAME}", simpleEntityName)
+                    .replaceAll("@\\{UENTITYNAME}", simpleEntityName)
+                    .replaceAll("@\\{COMPANYNAME}",packagePath)
+                    .replaceAll("@\\{XMLCONTENT}", xmlContent)
+                    .replaceAll("@\\{HTMLCONTENT}", htmlContent)
+                    .replaceAll("@\\{JSTABLECONTENT}", jsTableContent)
+                    .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
+            ;
             writerFile.createNewFile();
             BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
             writer.write(content);
@@ -175,7 +185,6 @@ public class CoolGenerator {
                         resultSet.getString("Key").equals("PRI")));
             }
         }
-//        columns.forEach(column -> System.out.println(column.toString()));
     }
 
 
@@ -322,4 +331,59 @@ public class CoolGenerator {
         }
         return sb.toString();
     }
+
+
+    /**********************************************************************************************/
+    /*************************************** Html动态字段 *******************************************/
+    /**********************************************************************************************/
+
+    private String createHtmlMsg(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            sb.append("        <div class=\"layui-form-item\">\n")
+                    .append("            <label class=\"layui-form-label\">")
+                    .append(column.getComment())
+                    .append("</label>\n")
+                    .append("            <div class=\"layui-input-block\">\n")
+                    .append("                <input id=\"")
+                    .append(column.getHumpName())
+                    .append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
+                    .append(column.getComment())
+                    .append("\">\n")
+                    .append("            </div>\n")
+                    .append("        </div>\n");
+        }
+        return sb.toString();
+    }
+
+    /**********************************************************************************************/
+    /**************************************** Js动态字段 ********************************************/
+    /**********************************************************************************************/
+
+    private String createJsTableMsg(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            sb.append(",{field: '")
+                    .append(column.getHumpName())
+                    .append(", align: 'center',title: '")
+                    .append(column.getComment())
+                    .append("'}\n");
+        }
+        return sb.toString();
+    }
+
+    private String createJsDetailMsg(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            sb.append(column.getHumpName())
+                    .append(": $('#")
+                    .append(column.getHumpName())
+                    .append("').val(),\n");
+        }
+        return sb.toString();
+    }
+
 }
