@@ -1,5 +1,6 @@
 package @{COMPANYNAME}.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import @{COMPANYNAME}.entity.@{ENTITYNAME};
 import @{COMPANYNAME}.service.@{ENTITYNAME}Service;
@@ -7,10 +8,7 @@ import com.core.common.Cools;
 import com.core.common.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class @{ENTITYNAME}Controller {
@@ -23,16 +21,6 @@ public class @{ENTITYNAME}Controller {
         return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}";
     }
 
-    @RequestMapping("/@{SIMPLEENTITYNAME}_add")
-    public String add(){
-        return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_add";
-    }
-
-    @RequestMapping("/@{SIMPLEENTITYNAME}_detail")
-    public String detail(){
-        return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_detail";
-    }
-
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/{id}/auth")
     @ResponseBody
     public R get(@PathVariable("id") Long id) {
@@ -42,7 +30,10 @@ public class @{ENTITYNAME}Controller {
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/list/auth")
     @ResponseBody
     public R list(@RequestParam(defaultValue = "1")Integer curr,
-                  @RequestParam(defaultValue = "10")Integer limit){
+                  @RequestParam(defaultValue = "10")Integer limit,
+                  @{ENTITYNAME} @{SIMPLEENTITYNAME}){
+        EntityWrapper<@{ENTITYNAME}> wrapper = new EntityWrapper<>();
+        wrapper.setEntity(@{SIMPLEENTITYNAME});
         return R.ok(@{SIMPLEENTITYNAME}Service.selectPage(new Page<>(curr, limit)));
     }
 
@@ -60,6 +51,16 @@ public class @{ENTITYNAME}Controller {
             return R.error();
         }
         @{SIMPLEENTITYNAME}Service.updateById(@{SIMPLEENTITYNAME});
+        return R.ok();
+    }
+
+    @RequestMapping(value = "/@{SIMPLEENTITYNAME}/delete/auth")
+    @ResponseBody
+    public R delete(Integer[] ids){
+        if (Cools.isEmpty(ids)){
+            return R.error();
+        }
+        @{SIMPLEENTITYNAME}Service.deleteBatchIds(Arrays.asList(ids));
         return R.ok();
     }
 }

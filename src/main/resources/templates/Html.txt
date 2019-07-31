@@ -26,7 +26,7 @@
 </div>
 
 <!-- 表格 -->
-<table class="layui-hide" id="user" lay-filter="user"></table>
+<table class="layui-hide" id="@{SIMPLEENTITYNAME}" lay-filter="@{SIMPLEENTITYNAME}"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" id="btn-add" lay-event="addData">新增</button>
@@ -42,7 +42,7 @@
 
 <script type="text/javascript" src="/static/js/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/static/layui/layui.js" charset="utf-8"></script>
-<script type="text/javascript" src="/static/js/user/user.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/js/@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.js" charset="utf-8"></script>
 
 <!-- 详情 -->
 <div id="data-add" class="layer_self_wrap" style="width:500px;display:none;">

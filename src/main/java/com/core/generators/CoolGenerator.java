@@ -115,7 +115,91 @@ public class CoolGenerator {
         xmlContent = createXmlMsg();
     }
 
-    // java entity 字段遍历修饰
+    private String readFile(String template){
+        StringBuilder txtContentBuilder=new StringBuilder();
+        ClassPathResource classPath=new ClassPathResource("templates/"+template + ".txt");
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(classPath.getInputStream()))) {
+            String lineContent;
+            while ((lineContent = reader.readLine()) != null) {
+                txtContentBuilder.append(lineContent).append("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return txtContentBuilder.toString();
+    }
+
+    private void writeFile(String content, String directory, String fileName, String template) throws IOException {
+        File codeDirectory=new File(directory);
+        if(!codeDirectory.exists()){
+            codeDirectory.mkdirs();
+        }
+        File writerFile=new File(directory+fileName);
+        if(!writerFile.exists()){
+            content=content.
+                    replaceAll("@\\{TABLENAME}", table).
+                    replaceAll("@\\{ENTITYIMPORT}", entityImport).
+                    replaceAll("@\\{ENTITYCONTENT}", entityContent).
+                    replaceAll("@\\{ENTITYNAME}", fullEntityName).			 	//实体
+                    replaceAll("@\\{SIMPLEENTITYNAME}", simpleEntityName). 		//实体简写
+                    replaceAll("@\\{UENTITYNAME}", simpleEntityName).	//实体大字
+                    replaceAll("@\\{COMPANYNAME}",packagePath).	//实体数据表前缀
+                    replaceAll("@\\{XMLCONTENT}", xmlContent);
+            writerFile.createNewFile();
+            BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
+            writer.write(content);
+            writer.flush();
+            writer.close();
+            System.out.println(fullEntityName+template+".java 源文件创建成功！");
+        }else{
+            System.out.println(fullEntityName+template+".java  源文件已经存在创建失败！");
+        }
+    }
+
+    private void gainDbInfo() throws Exception {
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
+
+        PreparedStatement ps = conn.prepareStatement("select * from " + table);
+        ResultSetMetaData meta = ps.executeQuery().getMetaData();
+        // 单表字段数量
+        int count = meta.getColumnCount();
+        ResultSet resultSet = ps.executeQuery("show full columns from " + table);
+        for (int i = 1; i < count + 1; i++) {
+            String columnName = meta.getColumnName(i);
+            if (resultSet.next() && columnName.equals(resultSet.getString("Field"))){
+                columns.add(new Column(meta.getColumnName(i),
+                        GeneratorUtils.getType(meta.getColumnType(i)),
+                        resultSet.getString("Comment"),
+                        resultSet.getString("Key").equals("PRI")));
+            }
+        }
+//        columns.forEach(column -> System.out.println(column.toString()));
+    }
+
+
+    public void setController(boolean controller) {
+        this.controller = controller;
+    }
+
+    public void setService(boolean service) {
+        this.service = service;
+    }
+
+    public void setMapper(boolean mapper) {
+        this.mapper = mapper;
+    }
+
+    public void setEntity(final boolean entity) {
+        this.entity = entity;
+    }
+
+
+    /**********************************************************************************************/
+    /************************************* Entity动态字段 *******************************************/
+    /**********************************************************************************************/
+
     private String createEntityMsg(){
         if (columns.isEmpty()){
             return null;
@@ -208,9 +292,11 @@ public class CoolGenerator {
         return sb.toString();
     }
 
-    /**
-     * xml 字段修饰
-     */
+
+    /**********************************************************************************************/
+    /*************************************** Xml动态字段 ********************************************/
+    /**********************************************************************************************/
+
     private String createXmlMsg(){
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
@@ -224,85 +310,5 @@ public class CoolGenerator {
                     .append("\" />\n");
         }
         return sb.toString();
-    }
-
-    private String readFile(String template){
-        StringBuilder txtContentBuilder=new StringBuilder();
-        ClassPathResource classPath=new ClassPathResource("templates/"+template + ".txt");
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(classPath.getInputStream()))) {
-            String lineContent;
-            while ((lineContent = reader.readLine()) != null) {
-                txtContentBuilder.append(lineContent).append("\n");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return txtContentBuilder.toString();
-    }
-
-    private void writeFile(String content, String directory, String fileName, String template) throws IOException {
-        File codeDirectory=new File(directory);
-        if(!codeDirectory.exists()){
-            codeDirectory.mkdirs();
-        }
-        File writerFile=new File(directory+fileName);
-        if(!writerFile.exists()){
-            content=content.
-                    replaceAll("@\\{TABLENAME}", table).
-                    replaceAll("@\\{ENTITYIMPORT}", entityImport).
-                    replaceAll("@\\{ENTITYCONTENT}", entityContent).
-                    replaceAll("@\\{ENTITYNAME}", fullEntityName).			 	//实体
-                    replaceAll("@\\{SIMPLEENTITYNAME}", simpleEntityName). 		//实体简写
-                    replaceAll("@\\{UENTITYNAME}", simpleEntityName).	//实体大字
-                    replaceAll("@\\{COMPANYNAME}",packagePath).	//实体数据表前缀
-                    replaceAll("@\\{XMLCONTENT}", xmlContent);
-            writerFile.createNewFile();
-            BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
-            writer.write(content);
-            writer.flush();
-            writer.close();
-            System.out.println(fullEntityName+template+".java 源文件创建成功！");
-        }else{
-            System.out.println(fullEntityName+template+".java  源文件已经存在创建失败！");
-        }
-    }
-
-    private void gainDbInfo() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
-        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
-
-        PreparedStatement ps = conn.prepareStatement("select * from " + table);
-        ResultSetMetaData meta = ps.executeQuery().getMetaData();
-        // 单表字段数量
-        int count = meta.getColumnCount();
-        ResultSet resultSet = ps.executeQuery("show full columns from " + table);
-        for (int i = 1; i < count + 1; i++) {
-            String columnName = meta.getColumnName(i);
-            if (resultSet.next() && columnName.equals(resultSet.getString("Field"))){
-                columns.add(new Column(meta.getColumnName(i),
-                        GeneratorUtils.getType(meta.getColumnType(i)),
-                        resultSet.getString("Comment"),
-                        resultSet.getString("Key").equals("PRI")));
-            }
-        }
-//        columns.forEach(column -> System.out.println(column.toString()));
-    }
-
-
-    public void setController(boolean controller) {
-        this.controller = controller;
-    }
-
-    public void setService(boolean service) {
-        this.service = service;
-    }
-
-    public void setMapper(boolean mapper) {
-        this.mapper = mapper;
-    }
-
-    public void setEntity(final boolean entity) {
-        this.entity = entity;
     }
 }
