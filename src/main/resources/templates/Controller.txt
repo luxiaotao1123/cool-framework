@@ -39,6 +39,20 @@ public class @{ENTITYNAME}Controller {
         return R.ok(@{SIMPLEENTITYNAME}Service.selectPage(new Page<>(curr, limit), wrapper));
     }
 
+    @RequestMapping(value = "/@{SIMPLEENTITYNAME}/edit/auth")
+    @ResponseBody
+    public R edit(@{ENTITYNAME} @{SIMPLEENTITYNAME}) {
+        if (Cools.isEmpty(@{SIMPLEENTITYNAME})){
+            return R.error();
+        }
+        if (null == @{SIMPLEENTITYNAME}.getId()){
+            @{SIMPLEENTITYNAME}Service.insert(@{SIMPLEENTITYNAME});
+        } else {
+            @{SIMPLEENTITYNAME}Service.updateById(@{SIMPLEENTITYNAME});
+        }
+        return R.ok();
+    }
+
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/add/auth")
     @ResponseBody
     public R add(@{ENTITYNAME} @{SIMPLEENTITYNAME}) {

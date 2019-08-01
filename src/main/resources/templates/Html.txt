@@ -45,11 +45,17 @@
 <script type="text/javascript" src="/static/js/@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.js" charset="utf-8"></script>
 
 <!-- 详情 -->
-<div id="data-add" class="layer_self_wrap" style="width:500px;display:none;">
+<div id="data-detail" class="layer_self_wrap" style="width:500px;display:none;">
     <form id="detail" class="layui-form">
+        <div class="layui-form-item" style="display:none">
+            <label class="layui-form-label">编号</label>
+            <div class="layui-input-block">
+                <input id="id" class="layui-input" type="text" placeholder="编号">
+            </div>
+        </div>
 @{HTMLCONTENT}
         <div class="layui-form-item">
-            <a type="button" class="layui-btn btn-submit" lay-submit lay-filter="add">添加</a>
+            <a id="data-detail-submit" type="button" class="layui-btn btn-submit" lay-submit lay-filter="edit">编辑</a>
         </div>
     </form>
 </div>

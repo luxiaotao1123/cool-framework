@@ -52,6 +52,7 @@ layui.config({
         var checkStatus = table.checkStatus(obj.config.id);
         switch(obj.event) {
             case 'addData':
+                $("#data-detail-submit").text("添加");
                 clearFormVal('#detail');
                 layer.open({
                     type: 1,
@@ -59,7 +60,7 @@ layui.config({
                     maxmin: true,
                     area: ['420px', '330px'],
                     shadeClose: false,
-                    content: $('#data-add'),
+                    content: $('#data-detail'),
                     success: function(){
                         $(".layui-layer-shade").remove();
                     }
@@ -118,7 +119,7 @@ layui.config({
                 maxmin: true,
                 area: ['420px', '330px'],
                 shadeClose: false,
-                content: $('#data-add'),
+                content: $('#data-detail'),
                 success: function(){
                     $(".layui-layer-shade").remove();
                     setFormVal($('#detail'), data, form);
@@ -127,13 +128,14 @@ layui.config({
         }
         // 编辑
         else if(obj.event === 'edit'){
+            $("#data-detail-submit").text("修改");
             layer.open({
                 type: 1,
-                title: '新增',
+                title: '修改',
                 maxmin: true,
                 area: ['420px', '330px'],
                 shadeClose: false,
-                content: $('#data-add'),
+                content: $('#data-detail'),
                 success: function(){
                     $(".layui-layer-shade").remove();
                     setFormVal($('#detail'), data, form);
@@ -142,15 +144,17 @@ layui.config({
         }
     });
 
-    form.on('submit(add)', function () {
+    // 新增
+    form.on('submit(edit)', function () {
         var index = layer.load(1, {
             shade: [0.5,'#000'] //0.1透明度的背景
         });
         var data = {
+            id: $('#id').val(),
 @{JSDETAILCONTENT}
         };
         $.ajax({
-            url: store.uri + "/@{SIMPLEENTITYNAME}/add/auth",
+            url: store.uri + "/@{SIMPLEENTITYNAME}/edit/auth",
             headers: {
                 'token': sessionStorage.getItem('token')
             },
@@ -160,7 +164,7 @@ layui.config({
                 if (res.code === 200){
                     layer.closeAll();
                     tableReload();
-                    $("#data-add :input").each(function () {
+                    $("#data-detail :input").each(function () {
                         $(this).val("");
                     });
                 } else if (res.code === 403){
