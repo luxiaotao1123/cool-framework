@@ -353,13 +353,33 @@ public class CoolGenerator {
                     .append("            <label class=\"layui-form-label\">")
                     .append(column.getComment())
                     .append("</label>\n")
-                    .append("            <div class=\"layui-input-block\">\n")
-                    .append("                <input id=\"")
-                    .append(column.getHumpName())
-                    .append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
-                    .append(column.getComment())
-                    .append("\">\n")
-                    .append("            </div>\n")
+                    .append("            <div class=\"layui-input-block\">\n");
+
+            // 输入框类型
+            if (Cools.isEmpty(column.getEnums())){
+                sb.append("                <input id=\"")
+                        .append(column.getHumpName())
+                        .append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
+                        .append(column.getComment())
+                        .append("\">\n");
+            // 枚举类型
+            } else {
+                sb.append("                <select id=\"")
+                        .append(column.getHumpName())
+                        .append("\">\n")
+                        .append("                    <option value=\"\" style=\"display: none\"></option>\n");
+                for (Map<String, Object> map : column.getEnums()){
+                    for (Map.Entry<String, Object> entry : map.entrySet()){
+                        sb.append("                    <option value=\"")
+                                .append(entry.getKey())
+                                .append("\">")
+                                .append(entry.getValue())
+                                .append("</option>\n");
+                    }
+                }
+                sb.append("                </select>\n");
+            }
+            sb.append("            </div>\n")
                     .append("        </div>\n");
         }
         return sb.toString();

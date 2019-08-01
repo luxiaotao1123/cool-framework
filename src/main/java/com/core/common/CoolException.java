@@ -10,10 +10,10 @@ public class CoolException extends RuntimeException {
     private Integer code;
     private String msg;
 
-    public CoolException(CodeRes codeRes) {
-        super(codeRes.des);
-        this.code = codeRes.code;
-        this.msg = codeRes.des;
+    public CoolException(BaseRes baseRes) {
+        super(baseRes.des);
+        this.code = baseRes.code;
+        this.msg = baseRes.des;
     }
 
     public Integer getCode() {

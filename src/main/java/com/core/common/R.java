@@ -14,17 +14,17 @@ public class R extends HashMap<String, Object> {
     private static final String DATA = "data";
 
     public R(){
-        this(CodeRes.OK);
+        this(BaseRes.OK);
     }
 
     public R(String msg){
-        super.put(CODE, CodeRes.ERROR.code);
+        super.put(CODE, BaseRes.ERROR.code);
         super.put(MSG, msg);
     }
 
-    private R(CodeRes codeRes) {
-        super.put(CODE, codeRes.code);
-        super.put(MSG, codeRes.des);
+    public R(BaseRes baseRes) {
+        super.put(CODE, baseRes.code);
+        super.put(MSG, baseRes.des);
     }
 
     public static R ok(){
@@ -38,10 +38,22 @@ public class R extends HashMap<String, Object> {
     }
 
     public static R error(){
-        return new R(CodeRes.ERROR);
+        return new R(BaseRes.ERROR);
     }
 
     public static R error(String msg){
         return new R(msg);
     }
+
+    public static R error(Object obj){
+        R r = new R();
+        r.put(DATA, obj);
+        return r;
+    }
+
+    public R add(Object obj){
+        this.put(DATA, obj);
+        return this;
+    }
+
 }
