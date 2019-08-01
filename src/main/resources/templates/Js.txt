@@ -121,7 +121,7 @@ layui.config({
                 content: $('#data-add'),
                 success: function(){
                     $(".layui-layer-shade").remove();
-                    setFormVal($('#detail'), data);
+                    setFormVal($('#detail'), data, form);
                 }
             });
         }
@@ -136,7 +136,7 @@ layui.config({
                 content: $('#data-add'),
                 success: function(){
                     $(".layui-layer-shade").remove();
-                    setFormVal($('#detail'), data);
+                    setFormVal($('#detail'), data, form);
                 }
             });
         }
@@ -208,10 +208,11 @@ function enumConvert() {
 @{JSENUMCONTENT}
 }
 
-function setFormVal(el, data) {
+function setFormVal(el, data, form) {
     for (var val in data) {
         el.find(":input[id='" + val + "']").val(data[val]);
     }
+    form.render('select');
 }
 
 function clearFormVal(el) {
