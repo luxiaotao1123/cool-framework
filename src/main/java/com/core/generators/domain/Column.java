@@ -20,9 +20,10 @@ public class Column {
     private String comment; // 备注
     private String humpName; // 小驼峰
     private boolean primaryKey; // 主键
+    private boolean notNull; // 非空
     private List<Map<String, Object>> enums; // 枚举值
 
-    public Column(String name, String type, String comment, boolean primaryKey) {
+    public Column(String name, String type, String comment, boolean primaryKey, boolean notNull) {
         this.name = name;
         this.type = type;
         this.comment = "";
@@ -49,9 +50,9 @@ public class Column {
             } else {
                 this.comment = comment;
             }
-
         }
         this.primaryKey = primaryKey;
+        this.notNull = notNull;
         this.humpName = GeneratorUtils._convert(name);
     }
 
@@ -107,6 +108,14 @@ public class Column {
         this.primaryKey = primaryKey;
     }
 
+    public boolean isNotNull() {
+        return notNull;
+    }
+
+    public void setNotNull(final boolean notNull) {
+        this.notNull = notNull;
+    }
+
     public List<Map<String, Object>> getEnums() {
         return enums;
     }
@@ -123,6 +132,7 @@ public class Column {
                 ", comment='" + comment + '\'' +
                 ", humpName='" + humpName + '\'' +
                 ", primaryKey=" + primaryKey +
+                ", notNull=" + notNull +
                 ", enums=" + enums +
                 '}';
     }

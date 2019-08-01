@@ -187,7 +187,8 @@ public class CoolGenerator {
                         meta.getColumnName(i),
                         GeneratorUtils.getType(meta.getColumnType(i)),
                         resultSet.getString("Comment"),
-                        resultSet.getString("Key").equals("PRI")
+                        resultSet.getString("Key").equals("PRI"),
+                        resultSet.getString("Null").equals("NO")
                 ));
             }
             columns.forEach(column -> System.out.println(column.toString()));
