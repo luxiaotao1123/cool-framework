@@ -350,11 +350,11 @@ public class CoolGenerator {
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
-            sb.append("        <div class=\"layui-form-item\">\n")
+            sb.append("        <div class=\"layui-inline\"  style=\"float: left; width: 31%;\">\n")
                     .append("            <label class=\"layui-form-label\">")
                     .append(column.getComment())
                     .append("</label>\n")
-                    .append("            <div class=\"layui-input-block\">\n");
+                    .append("            <div class=\"layui-input-inline\">\n");
 
             // 输入框类型
             if (Cools.isEmpty(column.getEnums())){
