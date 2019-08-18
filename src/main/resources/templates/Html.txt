@@ -44,21 +44,8 @@
 <script type="text/javascript" src="/static/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="/static/js/@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.js" charset="utf-8"></script>
 
-<!-- 详情 -->
-<div id="data-detail" class="layer_self_wrap" style="display:none;">
-    <form id="detail" class="layui-form">
-        <div class="layui-form-item" style="display:none">
-            <label class="layui-form-label">编号</label>
-            <div class="layui-input-block">
-                <input id="id" class="layui-input" type="text" placeholder="编号">
-            </div>
-        </div>
-@{HTMLCONTENT}
-        <div class="layui-form-item">
-            <a id="data-detail-submit" type="button" class="layui-btn btn-submit" lay-submit lay-filter="edit">编辑</a>
-        </div>
-    </form>
-</div>
+<iframe id="detail-iframe" scrolling="auto" style="display:none;"></iframe>
+
 </body>
 </html>
 

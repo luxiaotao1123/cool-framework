@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/css/common.css" media="all">
+</head>
+<body>
+
+<!-- 详情 -->
+<div id="data-detail" class="layer_self_wrap">
+    <form id="detail" class="layui-form">
+        <div class="layui-form-item" style="display:none">
+            <label class="layui-form-label">编号</label>
+            <div class="layui-input-block">
+                <input id="id" class="layui-input" type="text" placeholder="编号">
+            </div>
+        </div>
+@{HTMLCONTENT}
+        <div class="layui-form-item">
+            <a id="data-detail-submit" type="button" class="layui-btn btn-submit" lay-submit lay-filter="edit">编辑</a>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="/static/js/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/js/@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.js" charset="utf-8"></script>
+</html>
+

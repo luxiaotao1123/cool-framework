@@ -23,6 +23,11 @@ public class @{ENTITYNAME}Controller {
         return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}";
     }
 
+    @RequestMapping("/@{SIMPLEENTITYNAME}_detail")
+    public String detail(){
+        return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_detail";
+    }
+
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/{id}/auth")
     @ResponseBody
     public R get(@PathVariable("id") Long id) {

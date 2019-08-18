@@ -28,6 +28,7 @@ public class CoolGenerator {
             "Entity",
             "Xml",
             "Html",
+            "HtmlDetail",
             "Js"};
 
     public String url;
@@ -41,6 +42,7 @@ public class CoolGenerator {
     public boolean entity = true;
     public boolean xml = true;
     public boolean html = true;
+    public boolean htmlDetail = true;
     public boolean js = true;
 
     private List<Column> columns = new ArrayList<>();
@@ -97,6 +99,11 @@ public class CoolGenerator {
                     pass = html;
                     directory = HTML_DIR + "/view/" + simpleEntityName + "/";
                     fileName = simpleEntityName+".html";
+                    break;
+                case "HtmlDetail":
+                    pass = htmlDetail;
+                    directory = HTML_DIR + "/view/" + simpleEntityName + "/";
+                    fileName = simpleEntityName+"_detail.html";
                     break;
                 case "Js":
                     pass = js;
@@ -421,15 +428,15 @@ public class CoolGenerator {
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
             if (!Cools.isEmpty(column.getEnums())){
-                sb.append("    \\$(\"[data-field='")
+                sb.append("    my\\$(\"[data-field='")
                         .append(column.getHumpName())
                         .append("']\").children().each(function(){\n");
                 for (Map<String, Object> map : column.getEnums()){
                     for (Map.Entry<String, Object> entry : map.entrySet()){
-                        sb.append("        if(\\$(this).text()==='")
+                        sb.append("        if(my\\$(this).text()==='")
                                 .append(entry.getKey())
                                 .append("'){\n")
-                                .append("            \\$(this).text(\"")
+                                .append("            my\\$(this).text(\"")
                                 .append(entry.getValue())
                                 .append("\")\n")
                                 .append("        }\n");
