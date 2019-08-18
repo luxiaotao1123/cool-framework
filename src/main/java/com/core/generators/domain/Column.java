@@ -21,6 +21,7 @@ public class Column {
     private String humpName; // 小驼峰
     private boolean primaryKey; // 主键
     private boolean notNull; // 非空
+    private String foreignKey; // 外健实例名(大驼峰)
     private List<Map<String, Object>> enums; // 枚举值
 
     public Column(String name, String type, String comment, boolean primaryKey, boolean notNull) {
@@ -29,22 +30,34 @@ public class Column {
         this.comment = "";
         if (!Cools.isEmpty(comment)){
             Pattern pattern1 = Pattern.compile("(.+?)(?=\\{)");
+            Pattern pattern11 = Pattern.compile("(.+?)(?=\\[)");
             Matcher matcher1 = pattern1.matcher(comment);
-            if (matcher1.find()){
+            Matcher matcher11 = pattern11.matcher(comment);
+            if (matcher1.find()) {
                 this.comment = matcher1.group();
                 Pattern pattern2 = Pattern.compile("(?<=\\{)(.+?)(?=})");
                 Matcher matcher2 = pattern2.matcher(comment);
-                if (matcher2.find()){
+                if (matcher2.find()) {
                     String group = matcher2.group();
-                    if (!Cools.isEmpty(group)){
+                    if (!Cools.isEmpty(group)) {
                         String[] values = group.split(",");
                         this.enums = new ArrayList<>();
-                        for (String val : values){
+                        for (String val : values) {
                             Map<String, Object> map = new HashMap<>();
                             String[] split = val.split(":");
                             map.put(split[0], split[1]);
                             enums.add(map);
                         }
+                    }
+                }
+            } else if (matcher11.find()){
+                this.comment = matcher11.group();
+                Pattern pattern22 = Pattern.compile("(?<=\\[)(.+?)(?=])");
+                Matcher matcher22 = pattern22.matcher(comment);
+                if (matcher22.find()) {
+                    String group = matcher22.group();
+                    if (!Cools.isEmpty(group)) {
+                        this.foreignKey = GeneratorUtils.getNameSpace(group);
                     }
                 }
             } else {
@@ -116,6 +129,14 @@ public class Column {
         this.notNull = notNull;
     }
 
+    public String getForeignKey() {
+        return foreignKey;
+    }
+
+    public void setForeignKey(final String foreignKey) {
+        this.foreignKey = foreignKey;
+    }
+
     public List<Map<String, Object>> getEnums() {
         return enums;
     }
@@ -133,6 +154,7 @@ public class Column {
                 ", humpName='" + humpName + '\'' +
                 ", primaryKey=" + primaryKey +
                 ", notNull=" + notNull +
+                ", foreignKey='" + foreignKey + '\'' +
                 ", enums=" + enums +
                 '}';
     }

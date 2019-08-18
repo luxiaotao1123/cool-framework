@@ -404,8 +404,14 @@ public class CoolGenerator {
             sb.append("            ,{field: '")
                     .append(column.getHumpName())
                     .append("', align: 'center',title: '")
-                    .append(column.getComment())
-                    .append("'}\n");
+                    .append(column.getComment());
+            // 关联表
+            if (!Cools.isEmpty(column.getForeignKey())){
+                sb.append("',event: '")
+                        .append(column.getForeignKey())
+                        .append("', style: 'text-decoration: underline;cursor:pointer");
+            }
+            sb.append("'}\n");
         }
         return sb.toString();
     }
