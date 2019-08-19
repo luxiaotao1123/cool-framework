@@ -54,7 +54,6 @@ public class CoolGenerator {
     private String htmlContent;
     private String jsTableContent;
     private String jsDetailContent;
-    private String jsEnumContent;
     private String jsForeignKeyContent;
     private String jsDateContent;
 
@@ -130,7 +129,6 @@ public class CoolGenerator {
         htmlContent = createHtmlMsg();
         jsTableContent = createJsTableMsg();
         jsDetailContent = createJsDetailMsg();
-        jsEnumContent = createJsEnumMsg();
         jsForeignKeyContent = createJsFkContent();
         jsDateContent = createJsDateContent();
     }
@@ -169,7 +167,6 @@ public class CoolGenerator {
                     .replaceAll("@\\{HTMLCONTENT}", htmlContent)
                     .replaceAll("@\\{JSTABLECONTENT}", jsTableContent)
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
-                    .replaceAll("@\\{JSENUMCONTENT}", jsEnumContent)
                     .replaceAll("@\\{JSFOREIGNKEYCONTENT}", jsForeignKeyContent)
                     .replaceAll("@\\{JSDATECONTENT}", jsDateContent)
             ;
@@ -340,7 +337,7 @@ public class CoolGenerator {
                     }
                 }
                 sb.append("            default:\n")
-                        .append("                return null;\n")
+                        .append("                return String.valueOf(this.").append(column.getHumpName()).append(");\n")
                         .append("        }\n")
                         .append("    }\n\n");
             }
@@ -442,8 +439,8 @@ public class CoolGenerator {
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
             sb.append("            ,{field: '");
-            if ("Date".equals(column.getType())){
-                // 时间格式化
+            if ("Date".equals(column.getType()) || !Cools.isEmpty(column.getEnums())){
+                // 时间、枚举  格式化
                 sb.append(column.getHumpName()).append("\\$");
             } else {
                 sb.append(column.getHumpName());
@@ -477,31 +474,6 @@ public class CoolGenerator {
                  sb.append("\\$('#")
                         .append(column.getHumpName())
                         .append("').val(),\n");
-            }
-        }
-        return sb.toString();
-    }
-
-    private String createJsEnumMsg(){
-        StringBuilder sb = new StringBuilder();
-        for (Column column : columns){
-            if (column.isPrimaryKey()){ continue;}
-            if (!Cools.isEmpty(column.getEnums())){
-                sb.append("    my\\$(\"[data-field='")
-                        .append(column.getHumpName())
-                        .append("']\").children().each(function(){\n");
-                for (Map<String, Object> map : column.getEnums()){
-                    for (Map.Entry<String, Object> entry : map.entrySet()){
-                        sb.append("        if(my\\$(this).text()==='")
-                                .append(entry.getKey())
-                                .append("'){\n")
-                                .append("            my\\$(this).text(\"")
-                                .append(entry.getValue())
-                                .append("\")\n")
-                                .append("        }\n");
-                    }
-                }
-                sb.append("    });\n");
             }
         }
         return sb.toString();
