@@ -55,6 +55,7 @@ public class CoolGenerator {
     private String jsTableContent;
     private String jsDetailContent;
     private String jsEnumContent;
+    private String jsForeignKeyContent;
 
     public void build() throws Exception {
         init();
@@ -129,6 +130,7 @@ public class CoolGenerator {
         jsTableContent = createJsTableMsg();
         jsDetailContent = createJsDetailMsg();
         jsEnumContent = createJsEnumMsg();
+        jsForeignKeyContent = createJsFkContent();
     }
 
     private String readFile(String template){
@@ -166,6 +168,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{JSTABLECONTENT}", jsTableContent)
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
                     .replaceAll("@\\{JSENUMCONTENT}", jsEnumContent)
+                    .replaceAll("@\\{JSFOREIGNKEYCONTENT}", jsForeignKeyContent)
             ;
             writerFile.createNewFile();
             BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
@@ -449,6 +452,49 @@ public class CoolGenerator {
                     }
                 }
                 sb.append("    });\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    private String createJsFkContent(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            // 如果有关联外健
+            if (!Cools.isEmpty(column.getForeignKey())){
+                sb.append("            case '")
+                        .append(column.getForeignKey())
+                        .append("':\n")
+                        .append("                layer.open({\n")
+                        .append("                    type: 2,\n")
+                        .append("                    title: '").append(column.getComment().substring(0, column.getComment().length()-2)).append("详情',\n")
+                        .append("                    maxmin: true,\n")
+                        .append("                    area: [top.detailHeight, top.detailWidth],\n")
+                        .append("                    shadeClose: false,\n")
+                        .append("                    content: '").append(column.getForeignKey().toLowerCase()).append("_detail',\n")
+                        .append("                    success: function(layero, index){\n")
+                        .append("                        \\$.ajax({\n")
+                        .append("                            url: store.uri + \"/").append(column.getForeignKey().toLowerCase()).append("/\"+ data.").append(column.getHumpName()).append(" +\"/auth\",\n")
+                        .append("                            headers: {'token': sessionStorage.getItem('token')},\n")
+                        .append("                            data: data,\n")
+                        .append("                            method: 'POST',\n")
+                        .append("                            success: function (res) {\n")
+                        .append("                                if (res.code === 200){\n")
+                        .append("                                    detailScreen(index);\n")
+                        .append("                                    \\$(\".layui-layer-shade\").remove();\n")
+                        .append("                                    setFormVal(layer.getChildFrame('#detail', index), res.data);\n")
+                        .append("                                    layero.find('iframe')[0].contentWindow.layui.form.render('select');\n")
+                        .append("                                } else if (res.code === 403){\n")
+                        .append("                                    parent.location.href = \"/\";\n")
+                        .append("                                }else {\n")
+                        .append("                                    layer.alert(res.msg)\n")
+                        .append("                                }\n")
+                        .append("                            }\n")
+                        .append("                        })\n")
+                        .append("                    }\n")
+                        .append("                });\n")
+                        .append("                break;\n");
             }
         }
         return sb.toString();

@@ -148,6 +148,7 @@ layui.config({
                     }
                 });
                 break;
+@{JSFOREIGNKEYCONTENT}
         }
     });
 

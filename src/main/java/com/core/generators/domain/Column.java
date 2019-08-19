@@ -15,13 +15,20 @@ import java.util.regex.Pattern;
  */
 public class Column {
 
+    public static void main(String[] args) {
+        String s  ="会员编号";
+        String substring = s.substring(0, s.length()-2);
+        System.out.println(substring);
+//        new Column(null, null , "会员编号[sys_user]", false, false);
+    }
+
     private String name; // 表字段名
     private String type; // 类型
     private String comment; // 备注
     private String humpName; // 小驼峰
     private boolean primaryKey; // 主键
     private boolean notNull; // 非空
-    private String foreignKey; // 外健实例名(大驼峰)
+    private String foreignKey; // 外健实例名(大驼峰,如sys_user ==> User)
     private List<Map<String, Object>> enums; // 枚举值
 
     public Column(String name, String type, String comment, boolean primaryKey, boolean notNull) {
