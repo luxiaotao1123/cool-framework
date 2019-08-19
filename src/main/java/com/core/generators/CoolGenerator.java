@@ -56,6 +56,7 @@ public class CoolGenerator {
     private String jsDetailContent;
     private String jsEnumContent;
     private String jsForeignKeyContent;
+    private String jsDateContent;
 
     public void build() throws Exception {
         init();
@@ -131,6 +132,7 @@ public class CoolGenerator {
         jsDetailContent = createJsDetailMsg();
         jsEnumContent = createJsEnumMsg();
         jsForeignKeyContent = createJsFkContent();
+        jsDateContent = createJsDateContent();
     }
 
     private String readFile(String template){
@@ -169,6 +171,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
                     .replaceAll("@\\{JSENUMCONTENT}", jsEnumContent)
                     .replaceAll("@\\{JSFOREIGNKEYCONTENT}", jsForeignKeyContent)
+                    .replaceAll("@\\{JSDATECONTENT}", jsDateContent)
             ;
             writerFile.createNewFile();
             BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
@@ -248,6 +251,7 @@ public class CoolGenerator {
         boolean setTableId = true;
         for (Column column : columns){
             if (column.getType().equals("Date")){
+                entityIm.append("import java.text.SimpleDateFormat\n;");
                 entityIm.append("import java.util.Date;").append("\n");
             }
 
@@ -311,6 +315,17 @@ public class CoolGenerator {
                     .append(column.getHumpName())
                     .append(";\n")
                     .append("    }\n\n");
+            // 时间字段增加$格式化
+            if ("Date".equals(column.getType())){
+                sb.append("    public String get")
+                        .append(column.getHumpName().substring(0, 1).toUpperCase()).append(column.getHumpName().substring(1))
+                        .append("\\$")
+                        .append("(){\n")
+                        .append("        return new SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss\").format(this.")
+                        .append(column.getHumpName())
+                        .append(");\n")
+                        .append("    }\n\n");
+            }
             // set
             sb.append("    ")
                     .append("public void set")
@@ -369,8 +384,12 @@ public class CoolGenerator {
             // 输入框类型
             if (Cools.isEmpty(column.getEnums())){
                 sb.append("                <input id=\"")
-                        .append(column.getHumpName())
-                        .append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
+                        .append(column.getHumpName());
+                // 时间格式化
+                if ("Date".equals(column.getType())){
+                    sb.append("\\$");
+                }
+                sb.append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
                         .append(column.getComment())
                         .append("\">\n");
             // 枚举类型
@@ -404,9 +423,14 @@ public class CoolGenerator {
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
-            sb.append("            ,{field: '")
-                    .append(column.getHumpName())
-                    .append("', align: 'center',title: '")
+            sb.append("            ,{field: '");
+            if ("Date".equals(column.getType())){
+                // 时间格式化
+                sb.append(column.getHumpName()).append("\\$");
+            } else {
+                sb.append(column.getHumpName());
+            }
+            sb.append("', align: 'center',title: '")
                     .append(column.getComment());
             // 关联表
             if (!Cools.isEmpty(column.getForeignKey())){
@@ -425,9 +449,17 @@ public class CoolGenerator {
             if (column.isPrimaryKey()){ continue;}
             sb.append("            ")
                     .append(column.getHumpName())
-                    .append(": \\$('#")
-                    .append(column.getHumpName())
-                    .append("').val(),\n");
+                    .append(": ");
+            // 时间字段增加$格式化
+            if ("Date".equals(column.getType())){
+                sb.append("top.strToDate(\\$('#")
+                        .append(column.getHumpName())
+                        .append("\\\\\\\\\\$').val()),\n");
+            } else {
+                 sb.append("\\$('#")
+                        .append(column.getHumpName())
+                        .append("').val(),\n");
+            }
         }
         return sb.toString();
     }
@@ -495,6 +527,22 @@ public class CoolGenerator {
                         .append("                    }\n")
                         .append("                });\n")
                         .append("                break;\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    private String createJsDateContent(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns) {
+            if (column.isPrimaryKey()) {
+                continue;
+            }
+            if ("Date".equals(column.getType())){
+                sb.append("    layDate.render({\n")
+                        .append("        elem: '#").append(column.getHumpName()).append("\\\\\\\\\\$',\n")
+                        .append("        type: 'datetime'\n")
+                        .append("    });\n");
             }
         }
         return sb.toString();

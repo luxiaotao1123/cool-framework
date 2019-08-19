@@ -191,12 +191,7 @@ layui.config({
     });
 
     // 时间选择器
-    layDate.render({
-        elem: '#startTime'
-    });
-    layDate.render({
-        elem: '#endTime'
-    });
+@{JSDATECONTENT}
 
 });
 
