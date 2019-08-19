@@ -325,6 +325,24 @@ public class CoolGenerator {
                         .append(column.getHumpName())
                         .append(");\n")
                         .append("    }\n\n");
+            // 枚举字段增加$格式化
+            } else if (!Cools.isEmpty(column.getEnums())){
+                sb.append("    public String get")
+                        .append(column.getHumpName().substring(0, 1).toUpperCase()).append(column.getHumpName().substring(1))
+                        .append("\\$")
+                        .append("(){\n")
+                        .append("        if (null == this.").append(column.getHumpName()).append("){ return null; }\n")
+                        .append("        switch (this.").append(column.getHumpName()).append("){\n");
+                for (Map<String, Object> map : column.getEnums()){
+                    for (Map.Entry<String, Object> entry : map.entrySet()){
+                        sb.append("            case ").append(entry.getKey()).append(":\n")
+                                .append("                return \"").append(entry.getValue()).append("\";\n");
+                    }
+                }
+                sb.append("            default:\n")
+                        .append("                return null;\n")
+                        .append("        }\n")
+                        .append("    }\n\n");
             }
             // set
             sb.append("    ")
