@@ -21,7 +21,7 @@
             </div>
         </div>
 @{HTMLCONTENT}
-        <div class="layui-form-item">
+        <div id="data-detail-btn" class="layui-form-item">
             <a id="data-detail-submit" type="button" class="layui-btn btn-submit" lay-submit lay-filter="edit">编辑</a>
         </div>
     </form>
