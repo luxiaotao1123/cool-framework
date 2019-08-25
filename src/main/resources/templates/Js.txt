@@ -15,6 +15,7 @@ layui.config({
         headers: {token: sessionStorage.getItem('token')},
         url: '/@{SIMPLEENTITYNAME}/list/auth',
         page: true,
+        limit: 16,
         toolbar: '#toolbar',
         cellMinWidth: 50,
         cols: [[
