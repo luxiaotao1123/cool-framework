@@ -391,8 +391,12 @@ public class CoolGenerator {
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
             sb.append("        <div class=\"layui-inline\"  style=\"float: left; width: 31%;\">\n")
-                    .append("            <label class=\"layui-form-label\">")
-                    .append(column.getComment())
+                    .append("            <label class=\"layui-form-label\">");
+            // 非空判断
+            if (column.isNotNull()){
+                sb.append("<span class=\"not-null\">*</span>");
+            }
+            sb.append(column.getComment())
                     .append("</label>\n")
                     .append("            <div class=\"layui-input-inline\">\n");
 
@@ -405,13 +409,21 @@ public class CoolGenerator {
                     sb.append("\\$");
                 }
                 sb.append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
-                        .append(column.getComment())
-                        .append("\">\n");
+                        .append(column.getComment());
+                // 非空判断
+                if (column.isNotNull()){
+                    sb.append("\" lay-verify=\"required");
+                }
+                sb.append("\">\n");
             // 枚举类型
             } else {
                 sb.append("                <select id=\"")
-                        .append(column.getHumpName())
-                        .append("\">\n")
+                        .append(column.getHumpName());
+                // 非空判断
+                if (column.isNotNull()){
+                    sb.append("\" lay-verify=\"required");
+                }
+                sb.append("\">\n")
                         .append("                    <option value=\"\" style=\"display: none\"></option>\n");
                 for (Map<String, Object> map : column.getEnums()){
                     for (Map.Entry<String, Object> entry : map.entrySet()){
