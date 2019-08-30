@@ -510,7 +510,7 @@ public class CoolGenerator {
                         .append("                    success: function(layero, index){\n")
                         .append("                        \\$.ajax({\n")
                         .append("                            url: store.uri + \"/").append(column.getForeignKey().toLowerCase()).append("/\"+ data.").append(column.getHumpName()).append(" +\"/auth\",\n")
-                        .append("                            headers: {'token': sessionStorage.getItem('token')},\n")
+                        .append("                            headers: {'token': localStorage.getItem('token')},\n")
                         .append("                            data: data,\n")
                         .append("                            method: 'POST',\n")
                         .append("                            success: function (res) {\n")
