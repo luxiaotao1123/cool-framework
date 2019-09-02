@@ -390,13 +390,14 @@ public class CoolGenerator {
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
-            sb.append("        <div class=\"layui-inline\"  style=\"float: left; width: 31%;\">\n")
+            sb.append("        <div class=\"layui-inline\"  style=\"width: 31%;\">\n")
                     .append("            <label class=\"layui-form-label\">");
             // 非空判断
             if (column.isNotNull()){
                 sb.append("<span class=\"not-null\">*</span>");
             }
             sb.append(column.getComment())
+                    .append("：")
                     .append("</label>\n")
                     .append("            <div class=\"layui-input-inline\">\n");
 
