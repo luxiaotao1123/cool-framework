@@ -391,7 +391,15 @@ public class CoolGenerator {
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
-            sb.append("        <div class=\"layui-inline\"  style=\"width: 31%;\">\n")
+            sb.append("        <div class=\"layui-inline\"  style=\"width:");
+            if (null == column.getLength() || column.getLength() <= 256){
+                sb.append("31%");
+            } else if (column.getLength() <= 1024){
+                sb.append("64%");
+            } else {
+                sb.append("97%");
+            }
+            sb.append(";\">\n")
                     .append("            <label class=\"layui-form-label\">");
             // 非空判断
             if (column.isNotNull()){
