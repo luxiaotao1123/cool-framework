@@ -2,6 +2,9 @@ package com.core.generators.utils;
 
 import com.core.common.Cools;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static java.sql.Types.*;
 
 /**
@@ -80,6 +83,21 @@ public class GeneratorUtils {
             return comment.charAt(0) + " " + comment.charAt(1) + " " +comment.charAt(2);
         }
         return comment;
+    }
+
+    /**
+     * 获取mysql表字段长度
+     */
+    public static Integer getColumnLength(String typeMsg){
+        if (Cools.isEmpty(typeMsg)){
+            return null;
+        }
+        Pattern pattern = Pattern.compile("(?<=\\()(.+?)(?=\\))");
+        Matcher matcher = pattern.matcher(typeMsg);
+        if (matcher.find()){
+            return Integer.parseInt(matcher.group());
+        }
+        return null;
     }
 
 }

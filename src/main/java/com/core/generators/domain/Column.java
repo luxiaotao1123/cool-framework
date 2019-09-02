@@ -30,8 +30,9 @@ public class Column {
     private boolean notNull; // 非空
     private String foreignKey; // 外健实例名(大驼峰,如sys_user ==> User)
     private List<Map<String, Object>> enums; // 枚举值
+    private Integer length; // 字段长度
 
-    public Column(String name, String type, String comment, boolean primaryKey, boolean notNull) {
+    public Column(String name, String type, String comment, boolean primaryKey, boolean notNull, Integer length) {
         this.name = name;
         this.type = type;
         this.comment = "";
@@ -73,6 +74,7 @@ public class Column {
         }
         this.primaryKey = primaryKey;
         this.notNull = notNull;
+        this.length = length;
         this.humpName = GeneratorUtils._convert(name);
     }
 
@@ -150,6 +152,14 @@ public class Column {
 
     public void setEnums(List<Map<String, Object>> enums) {
         this.enums = enums;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(final Integer length) {
+        this.length = length;
     }
 
     @Override
