@@ -1,5 +1,7 @@
 package com.core.generators.utils;
 
+import com.core.common.Cools;
+
 import static java.sql.Types.*;
 
 /**
@@ -65,6 +67,19 @@ public class GeneratorUtils {
             sb.append(strings[i]);
         }
         return _convert(sb.toString(), false);
+    }
+
+    // htmlDetail 字符适配
+    public static String supportHtmlName(String comment){
+        if (Cools.isEmpty(comment)){
+            return "";
+        }
+        if (comment.length() == 2){
+            return comment.charAt(0) + "　　" + comment.charAt(1);
+        } else if (comment.length() == 3){
+            return comment.charAt(0) + " " + comment.charAt(1) + " " +comment.charAt(2);
+        }
+        return comment;
     }
 
 }

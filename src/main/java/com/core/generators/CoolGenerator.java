@@ -396,7 +396,7 @@ public class CoolGenerator {
             if (column.isNotNull()){
                 sb.append("<span class=\"not-null\">*</span>");
             }
-            sb.append(column.getComment())
+            sb.append(GeneratorUtils.supportHtmlName(column.getComment()))
                     .append("：")
                     .append("</label>\n")
                     .append("            <div class=\"layui-input-inline\">\n");
