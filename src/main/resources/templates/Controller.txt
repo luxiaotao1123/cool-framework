@@ -84,4 +84,13 @@ public class @{ENTITYNAME}Controller {
         @{SIMPLEENTITYNAME}Service.deleteBatchIds(Arrays.asList(ids));
         return R.ok();
     }
+
+    @RequestMapping(value = "/@{SIMPLEENTITYNAME}/export/auth")
+    @ResponseBody
+    public R export(@{ENTITYNAME} @{SIMPLEENTITYNAME}){
+        EntityWrapper<@{ENTITYNAME}> wrapper = new EntityWrapper<>();
+        wrapper.setEntity(@{SIMPLEENTITYNAME});
+        return R.ok(@{SIMPLEENTITYNAME}Service.selectList(wrapper));
+    }
+
 }
