@@ -1,5 +1,9 @@
 package com.core.controller;
 
+import com.core.common.BaseRes;
+import com.core.common.Cools;
+import com.core.exception.CoolException;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +14,9 @@ import java.util.List;
 public class BaseController {
 
     public <T> List exportSupport(List<T> list, List<String> fields){
+        if (Cools.isEmpty(list)){
+            throw new CoolException(BaseRes.EMPTY);
+        }
         try {
             List<List<Object>> result = new ArrayList<>();
             Method[] methods = list.get(0).getClass().getMethods();

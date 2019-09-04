@@ -96,7 +96,7 @@ layui.config({
                                 } else if (res.code === 403){
                                     top.location.href = "/";
                                 } else {
-                                    layer.alert(res.msg)
+                                    layer.msg(res.msg)
                                 }
                             }
                         })
@@ -133,7 +133,7 @@ layui.config({
                         } else if (res.code === 403) {
                             top.location.href = "/";
                         } else {
-                            layer.alert(res.msg)
+                            layer.msg(res.msg)
                         }
                     }
                 });
@@ -209,7 +209,7 @@ layui.config({
                 } else if (res.code === 403){
                     top.location.href = "/";
                 }else {
-                    layer.alert(res.msg)
+                    layer.msg(res.msg)
                 }
                 layer.close(index);
             }

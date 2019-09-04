@@ -1,19 +1,10 @@
 package com.core.common;
 
-public enum BaseRes {
+public interface BaseRes {
 
-    OK(200, "操作成功"),
-    DENIED(403, "无权限"),
-    ERROR(500, "服务器错误"),
-
-    ;
-
-    public int code;
-    public String des;
-
-    BaseRes(final int code, final String des) {
-        this.code = code;
-        this.des = des;
-    }
+    String OK = "200-操作成功";
+    String EMPTY = "201-暂无数据";
+    String DENIED = "403-无权限";
+    String ERROR = "500-服务器错误";
 
 }
