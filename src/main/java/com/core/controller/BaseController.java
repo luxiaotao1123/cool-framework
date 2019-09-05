@@ -46,7 +46,9 @@ public class BaseController {
         if (Cools.isEmpty(map)){
             return new HashMap<>();
         }
-        map.entrySet().removeIf(next -> next.getKey().equals("curr") || next.getKey().equals("limit"));
+        map.entrySet().removeIf(next -> next.getKey().equals("curr")
+                || next.getKey().equals("limit")
+                || Cools.isEmpty(next.getValue()));
         return map;
     }
 
