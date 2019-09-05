@@ -72,4 +72,25 @@ public class Cools {
         }
     }
 
+    /**
+     * 截取字符串(默认end=true)
+     * @param str 被截字符串
+     * @param end true:最后一个字符 / false:第一个字符
+     */
+    public static String deleteChar(String str, boolean end){
+        if (isEmpty(str)){
+            return "";
+        }
+        if (end){
+            return str.substring(0, str.length()-1);
+        } else {
+            return str.substring(1);
+        }
+    }
+
+    public static String deleteChar(String str){
+        return deleteChar(str, true);
+    }
+
+
 }
