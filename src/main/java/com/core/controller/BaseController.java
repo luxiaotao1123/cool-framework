@@ -6,7 +6,9 @@ import com.core.exception.CoolException;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vincent on 2019-06-09
@@ -38,6 +40,14 @@ public class BaseController {
             throw new RuntimeException();
         }
 
+    }
+
+    public static Map<String, Object> excludePage(Map<String, Object> map){
+        if (Cools.isEmpty(map)){
+            return new HashMap<>();
+        }
+        map.entrySet().removeIf(next -> next.getKey().equals("curr") || next.getKey().equals("limit"));
+        return map;
     }
 
 }
