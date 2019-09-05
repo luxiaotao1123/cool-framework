@@ -292,3 +292,9 @@ function detailScreen(index) {
     });
     $(".layui-layer-shade").remove();
 }
+
+$('body').keydown(function () {
+    if (event.keyCode === 13) {
+        $("#search").click();
+    }
+});
