@@ -42,7 +42,7 @@ public class BaseController {
 
     }
 
-    public static Map<String, Object> excludePage(Map<String, Object> map){
+    public static Map<String, Object> excludeTrash(Map<String, Object> map){
         if (Cools.isEmpty(map)){
             return new HashMap<>();
         }
