@@ -56,7 +56,7 @@ layui.config({
                     type: 2,
                     title: '新增',
                     maxmin: true,
-                    area: [top.detailHeight, top.detailWidth],
+                    area: [top.detailWidth, top.detailHeight],
                     shadeClose: false,
                     content: '/@{SIMPLEENTITYNAME}_detail',
                     success: function(layero, index){
@@ -150,7 +150,7 @@ layui.config({
                     type: 2,
                     title: '查看',
                     maxmin: true,
-                    area: [top.detailHeight, top.detailWidth],
+                    area: [top.detailWidth, top.detailHeight],
                     shadeClose: false,
                     content: '/@{SIMPLEENTITYNAME}_detail',
                     success: function(layero, index){
@@ -168,7 +168,7 @@ layui.config({
                     type: 2,
                     title: '修改',
                     maxmin: true,
-                    area: [top.detailHeight, top.detailWidth],
+                    area: [top.detailWidth, top.detailHeight],
                     shadeClose: false,
                     content: '/@{SIMPLEENTITYNAME}_detail',
                     success: function(layero, index){
