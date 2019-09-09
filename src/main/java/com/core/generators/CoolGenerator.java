@@ -519,7 +519,7 @@ public class CoolGenerator {
                         .append("                    content: '").append(column.getForeignKey().toLowerCase()).append("_detail',\n")
                         .append("                    success: function(layero, index){\n")
                         .append("                        \\$.ajax({\n")
-                        .append("                            url: store.uri + \"/").append(column.getForeignKey().toLowerCase()).append("/\"+ data.").append(column.getHumpName()).append(" +\"/auth\",\n")
+                        .append("                            url: \"/").append(column.getForeignKey().toLowerCase()).append("/\"+ data.").append(column.getHumpName()).append(" +\"/auth\",\n")
                         .append("                            headers: {'token': localStorage.getItem('token')},\n")
                         .append("                            data: data,\n")
                         .append("                            method: 'POST',\n")

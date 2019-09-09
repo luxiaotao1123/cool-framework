@@ -1,11 +1,10 @@
 var pageCurr;
 layui.config({
     base: '/static/js/'
-}).use(['table','laydate', 'form', 'store'], function(){
+}).use(['table','laydate', 'form'], function(){
     var table = layui.table;
     var $ = layui.jquery;
     var layer = layui.layer;
-    var store = layui.store;
     var layDate = layui.laydate;
     var form = layui.form;
 
@@ -83,7 +82,7 @@ layui.config({
                 } else {
                     layer.confirm('确定删除'+(ids.length===1?'此':ids.length)+'条数据吗', function(){
                         $.ajax({
-                            url: store.uri + "/@{SIMPLEENTITYNAME}/delete/auth",
+                            url: "/@{SIMPLEENTITYNAME}/delete/auth",
                             headers: {'token': localStorage.getItem('token')},
                             data: {ids: ids},
                             method: 'POST',
@@ -120,7 +119,7 @@ layui.config({
                     'fields': fields
                 };
                 $.ajax({
-                    url: store.uri + "/@{SIMPLEENTITYNAME}/export/auth",
+                    url: "/@{SIMPLEENTITYNAME}/export/auth",
                     headers: {'token': localStorage.getItem('token')},
                     data: JSON.stringify(param),
                     dataType:'json',
@@ -193,7 +192,7 @@ layui.config({
 @{JSDETAILCONTENT}
         };
         $.ajax({
-            url: store.uri + "/@{SIMPLEENTITYNAME}/edit/auth",
+            url: "/@{SIMPLEENTITYNAME}/edit/auth",
             headers: {'token': localStorage.getItem('token')},
             data: data,
             method: 'POST',
