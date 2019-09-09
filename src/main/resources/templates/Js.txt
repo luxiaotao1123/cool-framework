@@ -1,7 +1,5 @@
 var pageCurr;
-layui.config({
-    base: '/static/js/'
-}).use(['table','laydate', 'form'], function(){
+layui.use(['table','laydate', 'form'], function(){
     var table = layui.table;
     var $ = layui.jquery;
     var layer = layui.layer;
