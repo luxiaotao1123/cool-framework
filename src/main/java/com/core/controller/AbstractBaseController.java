@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by vincent on 2019-06-09
  */
-public class BaseController {
+public abstract class AbstractBaseController {
 
     public <T> List exportSupport(List<T> list, List<String> fields){
         if (Cools.isEmpty(list)){
