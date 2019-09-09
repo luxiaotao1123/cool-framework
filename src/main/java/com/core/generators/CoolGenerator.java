@@ -533,7 +533,7 @@ public class CoolGenerator {
                         .append("                                } else if (res.code === 403){\n")
                         .append("                                    parent.location.href = \"/\";\n")
                         .append("                                }else {\n")
-                        .append("                                    layer.alert(res.msg)\n")
+                        .append("                                    layer.msg(res.msg)\n")
                         .append("                                }\n")
                         .append("                            }\n")
                         .append("                        })\n")
