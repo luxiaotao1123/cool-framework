@@ -29,7 +29,8 @@ public class CoolGenerator {
             "Xml",
             "Html",
             "HtmlDetail",
-            "Js"};
+            "Js",
+            "Sql"};
 
     public String url;
     public String username;
@@ -44,6 +45,7 @@ public class CoolGenerator {
     public boolean html = true;
     public boolean htmlDetail = true;
     public boolean js = true;
+    public boolean sql = true;
 
     private List<Column> columns = new ArrayList<>();
     private String fullEntityName;
@@ -111,6 +113,10 @@ public class CoolGenerator {
                     directory = HTML_DIR + "/static/js/" + simpleEntityName + "/";
                     fileName = simpleEntityName+".js";
                     break;
+                case "Sql":
+                    pass = sql;
+                    directory = JAVA_DIR;
+                    fileName = simpleEntityName+".sql";
                 default:
                     break;
             }
