@@ -3,7 +3,7 @@ package @{COMPANYNAME}.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.cool.demo.common.utils.DateUtils;
+import com.core.common.DateUtils;
 import @{COMPANYNAME}.entity.@{ENTITYNAME};
 import @{COMPANYNAME}.service.@{ENTITYNAME}Service;
 import com.core.common.Cools;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class @{ENTITYNAME}Controller extends BaseController {
+public class @{ENTITYNAME}Controller extends AbstractBaseController {
 
     @Autowired
     private @{ENTITYNAME}Service @{SIMPLEENTITYNAME}Service;
