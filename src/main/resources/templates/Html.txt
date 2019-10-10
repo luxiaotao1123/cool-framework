@@ -45,6 +45,7 @@
 <script type="text/javascript" src="/static/js/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/static/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="/static/js/@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/js/common.js" charset="utf-8"></script>
 
 <iframe id="detail-iframe" scrolling="auto" style="display:none;"></iframe>
 

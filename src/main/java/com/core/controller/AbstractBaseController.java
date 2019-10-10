@@ -37,7 +37,7 @@ public abstract class AbstractBaseController {
             }
             return result;
         } catch (Exception e){
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
 
     }
