@@ -255,8 +255,9 @@ public class CoolGenerator {
         boolean setTableId = true;
         for (Column column : columns){
             if (column.getType().equals("Date")){
-                entityIm.append("import java.text.SimpleDateFormat\n;");
-                entityIm.append("import java.util.Date;").append("\n");
+                entityIm.append("import java.text.SimpleDateFormat;\n")
+                        .append("import com.core.common.Cools;\n")
+                        .append("import java.util.Date;\n");
             }
 
             // 注释
@@ -417,7 +418,12 @@ public class CoolGenerator {
             sb.append(GeneratorUtils.supportHtmlName(column.getComment()))
                     .append("：")
                     .append("</label>\n")
-                    .append("            <div class=\"layui-input-inline\">\n");
+                    .append("            <div class=\"layui-input-inline");
+            // 关联外键
+            if (!Cools.isEmpty(column.getForeignKey())){
+                sb.append(" cool-auto-complete");
+            }
+            sb.append("\">\n");
 
             // 输入框类型
             if (Cools.isEmpty(column.getEnums())){
@@ -431,9 +437,21 @@ public class CoolGenerator {
                         .append(column.getComment());
                 // 非空判断
                 if (column.isNotNull()){
-                    sb.append("\" lay-verify=\"required");
+                    sb.append("\" lay-verify=\"required\" ");
                 }
-                sb.append("\">\n");
+                // 关联外键
+                if (!Cools.isEmpty(column.getForeignKey())){
+                    sb.append("data-key=\"").append(column.getForeignKey().substring(0, 1).toLowerCase()).append(column.getForeignKey().substring(1))
+                            .append("Query\" onkeyup=\"autoLoad(this.getAttribute('data-key'))\"");
+                }
+                sb.append(">\n");
+                // 关联外键
+                if (!Cools.isEmpty(column.getForeignKey())){
+                    sb.append("                <select class=\"cool-auto-complete-select\" data-key=\"")
+                            .append(column.getForeignKey().substring(0, 1).toLowerCase()).append(column.getForeignKey().substring(1))
+                            .append("QuerySelect\" onchange=\"confirmed(this.getAttribute('data-key'))\" multiple=\"multiple\">\n")
+                            .append("                </select>");
+                }
             // 枚举类型
             } else {
                 sb.append("                <select id=\"")

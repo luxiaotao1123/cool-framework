@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/css/cool.css" media="all">
     <link rel="stylesheet" href="/static/css/common.css" media="all">
 </head>
 <body>
@@ -38,5 +39,6 @@
 <script type="text/javascript" src="/static/js/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/static/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="/static/js/@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/js/common.js" charset="utf-8"></script>
 </html>
 

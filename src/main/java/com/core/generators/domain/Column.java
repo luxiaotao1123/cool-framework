@@ -15,17 +15,6 @@ import java.util.regex.Pattern;
  */
 public class Column {
 
-    public static void main(String[] args) {
-        String s  ="会员编号";
-        String substring = s.substring(0, s.length()-2);
-        System.out.println(substring);
-//        new Column(null, null , "会员编号[sys_user]", false, false);
-        //8c8178c1f5dd47329
-        // 16 ==> 31%
-        // ?? ==> 64%
-        // ?? ==> 97%
-    }
-
     private String name; // 表字段名
     private String type; // 类型
     private String comment; // 备注
