@@ -510,14 +510,14 @@ public class CoolGenerator {
                     sb.append("\\$");
                 }
                 sb.append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
-                        .append(column.getComment());
+                        .append(column.getComment()).append("\"");
                 // 非空判断
                 if (column.isNotNull()){
-                    sb.append("\" lay-verify=\"required\" ");
+                    sb.append(" lay-verify=\"required\" ");
                 }
                 // 关联外键
                 if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                    sb.append("style=\"display: none\"");
+                    sb.append(" style=\"display: none\"");
                 }
                 sb.append(">\n");
                 // 关联外键
