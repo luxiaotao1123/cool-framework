@@ -54,6 +54,7 @@ public class CoolGenerator {
     private String entityContent;
     private String xmlContent;
     private String htmlContent;
+    private String htmlDetailContent;
     private String jsTableContent;
     private String jsDetailContent;
     private String jsForeignKeyContent;
@@ -134,6 +135,7 @@ public class CoolGenerator {
         entityContent = createEntityMsg();
         xmlContent = createXmlMsg();
         htmlContent = createHtmlMsg();
+        htmlDetailContent = createHtmlDetailMsg();
         jsTableContent = createJsTableMsg();
         jsDetailContent = createJsDetailMsg();
         jsForeignKeyContent = createJsFkContent();
@@ -173,6 +175,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{COMPANYNAME}",packagePath)
                     .replaceAll("@\\{XMLCONTENT}", xmlContent)
                     .replaceAll("@\\{HTMLCONTENT}", htmlContent)
+                    .replaceAll("@\\{HTMLDETAILCONTENT}", htmlDetailContent)
                     .replaceAll("@\\{JSTABLECONTENT}", jsTableContent)
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
                     .replaceAll("@\\{JSFOREIGNKEYCONTENT}", jsForeignKeyContent)
@@ -438,12 +441,39 @@ public class CoolGenerator {
         return sb.toString();
     }
 
+    /**********************************************************************************************/
+    /************************************** Html动态字段 *******************************************/
+    /**********************************************************************************************/
+
+    private String createHtmlMsg(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            if (!Cools.isEmpty(column.getForeignKeyMajor())){
+                sb.append("    <div class=\"layui-inline\">\n")
+                        .append("        <label class=\"layui-form-label\">").append(GeneratorUtils.supportHtmlName(column.getComment())).append("：</label>\n")
+                        .append("        <div class=\"layui-input-inline cool-auto-complete\">\n")
+                        .append("            <input id=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Id\"")
+                        .append(" class=\"layui-input\" name=\"").append(column.getName()).append("\" type=\"text\" placeholder=\"请输入\" autocomplete=\"off\" style=\"display: none\">\n")
+                        .append("            <input id=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(column.getForeignKeyMajor())
+                        .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"备注信息\" onfocus=this.blur()>\n")
+                        .append("            <div class=\"cool-auto-complete-window\">\n")
+                        .append("                <input class=\"cool-auto-complete-window-input\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query\" onkeyup=\"autoLoad(this.getAttribute('data-key'))\">\n")
+                        .append("                <select class=\"cool-auto-complete-window-select\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("QuerySelect\" onchange=\"confirmed(this.getAttribute('data-key'))\" multiple=\"multiple\">\n")
+                        .append("                </select>\n")
+                        .append("            </div>\n")
+                        .append("        </div>\n")
+                        .append("    </div>\n");
+            }
+        }
+        return sb.toString();
+    }
 
     /**********************************************************************************************/
     /*********************************** HtmlDetail动态字段 *****************************************/
     /**********************************************************************************************/
 
-    private String createHtmlMsg(){
+    private String createHtmlDetailMsg(){
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}

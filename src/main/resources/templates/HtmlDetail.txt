@@ -21,7 +21,7 @@
                 <input id="id" class="layui-input" type="text" placeholder="编号">
             </div>
         </div>
-@{HTMLCONTENT}
+@{HTMLDETAILCONTENT}
 
         <hr class="layui-bg-gray">
 
