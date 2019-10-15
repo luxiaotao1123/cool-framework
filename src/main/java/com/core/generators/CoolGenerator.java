@@ -456,7 +456,7 @@ public class CoolGenerator {
                         .append("            <input id=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Id\"")
                         .append(" class=\"layui-input\" name=\"").append(column.getName()).append("\" type=\"text\" placeholder=\"请输入\" autocomplete=\"off\" style=\"display: none\">\n")
                         .append("            <input id=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(column.getForeignKeyMajor())
-                        .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"备注信息\" onfocus=this.blur()>\n")
+                        .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"请输入\" onfocus=this.blur()>\n")
                         .append("            <div class=\"cool-auto-complete-window\">\n")
                         .append("                <input class=\"cool-auto-complete-window-input\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query\" onkeyup=\"autoLoad(this.getAttribute('data-key'))\">\n")
                         .append("                <select class=\"cool-auto-complete-window-select\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("QuerySelect\" onchange=\"confirmed(this.getAttribute('data-key'))\" multiple=\"multiple\">\n")
