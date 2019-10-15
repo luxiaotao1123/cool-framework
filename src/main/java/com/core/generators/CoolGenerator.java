@@ -58,6 +58,7 @@ public class CoolGenerator {
     private String jsDetailContent;
     private String jsForeignKeyContent;
     private String jsDateContent;
+    private String majorColumn;
 
     public void build() throws Exception {
         init();
@@ -137,6 +138,7 @@ public class CoolGenerator {
         jsDetailContent = createJsDetailMsg();
         jsForeignKeyContent = createJsFkContent();
         jsDateContent = createJsDateContent();
+        majorColumn = createMajorMsg();
     }
 
     private String readFile(String template){
@@ -175,6 +177,8 @@ public class CoolGenerator {
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
                     .replaceAll("@\\{JSFOREIGNKEYCONTENT}", jsForeignKeyContent)
                     .replaceAll("@\\{JSDATECONTENT}", jsDateContent)
+                    .replaceAll("@\\{MAJORCOLUMN}", majorColumn)
+                    .replaceAll("@\\{UPCASEMARJORCOLUMN}", GeneratorUtils.firstCharConvert(majorColumn, false))
             ;
             writerFile.createNewFile();
             BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
@@ -190,7 +194,11 @@ public class CoolGenerator {
     private void gainDbInfo() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
+        this.columns = getColumns(conn, table);
+    }
 
+    public static List<Column> getColumns(Connection conn, String table) throws Exception {
+        List<Column> result = new ArrayList<>();
         PreparedStatement ps = conn.prepareStatement("select * from " + table);
         ResultSetMetaData meta = ps.executeQuery().getMetaData();
         // 单表字段数量
@@ -199,7 +207,8 @@ public class CoolGenerator {
         for (int i = 1; i < count + 1; i++) {
             String columnName = meta.getColumnName(i);
             if (resultSet.next() && columnName.equals(resultSet.getString("Field"))){
-                columns.add(new Column(
+                result.add(new Column(
+                        conn,
                         meta.getColumnName(i),
                         GeneratorUtils.getType(meta.getColumnType(i)),
                         resultSet.getString("Comment"),
@@ -208,8 +217,9 @@ public class CoolGenerator {
                         GeneratorUtils.getColumnLength(resultSet.getString("Type"))
                 ));
             }
-            columns.forEach(column -> System.out.println(column.toString()));
+//            result.forEach(column -> System.out.println(column.toString()));
         }
+        return result;
     }
 
 
@@ -284,6 +294,12 @@ public class CoolGenerator {
                         .append("\n");
             }
 
+            // 外键修饰
+            if (!Cools.isEmpty(column.getForeignKeyMajor())){
+                entityIm.append("import com.core.common.SpringUtils;\n")
+                        .append("import ").append(packagePath).append(".service.").append(column.getForeignKey()).append("Service;\n");
+            }
+
             // 命名转换注解
             if (!column.getName().equals(column.getHumpName())){
                 if (setTableField){
@@ -352,6 +368,20 @@ public class CoolGenerator {
                         .append("        }\n")
                         .append("    }\n\n");
             }
+
+            // 外键修饰
+            if (!Cools.isEmpty(column.getForeignKeyMajor())){
+                sb.append("    public String get").append(column.getForeignKey()).append(column.getForeignKeyMajor()).append("(){\n")
+                        .append("        ").append(column.getForeignKey()).append("Service service = SpringUtils.getBean(").append(column.getForeignKey()).append("Service.class);\n")
+                        .append("        ").append(column.getForeignKey()).append(" ").append(GeneratorUtils.firstCharConvert(column.getForeignKey()))
+                        .append(" = service.selectById(this.").append(column.getHumpName()).append(");\n")
+                        .append("        if (!Cools.isEmpty(").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(")){\n")
+                        .append("            return ").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(".get").append(column.getForeignKeyMajor()).append("();\n")
+                        .append("        }\n")
+                        .append("        return null;\n")
+                        .append("    }\n");
+            }
+
             // set
             sb.append("    ")
                     .append("public void set")
@@ -372,6 +402,22 @@ public class CoolGenerator {
         return sb.toString();
     }
 
+    /**********************************************************************************************/
+    /*********************************** Controller动态字段 *****************************************/
+    /**********************************************************************************************/
+
+    private String createMajorMsg(){
+        String defaultMajor = "id";
+        for (Column column: columns){
+            if (column.isPrimaryKey()){
+                defaultMajor = column.getHumpName();
+            }
+            if (column.isMajor()){
+                return column.getHumpName();
+            }
+        }
+        return defaultMajor;
+    }
 
     /**********************************************************************************************/
     /*************************************** Xml动态字段 ********************************************/
@@ -420,7 +466,7 @@ public class CoolGenerator {
                     .append("</label>\n")
                     .append("            <div class=\"layui-input-inline");
             // 关联外键
-            if (!Cools.isEmpty(column.getForeignKey())){
+            if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append(" cool-auto-complete");
             }
             sb.append("\">\n");
@@ -440,17 +486,20 @@ public class CoolGenerator {
                     sb.append("\" lay-verify=\"required\" ");
                 }
                 // 关联外键
-                if (!Cools.isEmpty(column.getForeignKey())){
-                    sb.append("data-key=\"").append(column.getForeignKey().substring(0, 1).toLowerCase()).append(column.getForeignKey().substring(1))
-                            .append("Query\" onkeyup=\"autoLoad(this.getAttribute('data-key'))\"");
+                if (!Cools.isEmpty(column.getForeignKeyMajor())){
+                    sb.append("style=\"display: none\"");
                 }
                 sb.append(">\n");
                 // 关联外键
-                if (!Cools.isEmpty(column.getForeignKey())){
-                    sb.append("                <select class=\"cool-auto-complete-select\" data-key=\"")
-                            .append(column.getForeignKey().substring(0, 1).toLowerCase()).append(column.getForeignKey().substring(1))
-                            .append("QuerySelect\" onchange=\"confirmed(this.getAttribute('data-key'))\" multiple=\"multiple\">\n")
-                            .append("                </select>");
+                if (!Cools.isEmpty(column.getForeignKeyMajor())){
+                    sb.append("                <input id=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(column.getForeignKeyMajor())
+                            .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"").append(column.getComment()).append("\" onfocus=this.blur()>\n");
+                    sb.append("                <div class=\"cool-auto-complete-window\">\n")
+                            .append("                    <input class=\"cool-auto-complete-window-input\" data-key=\"")
+                            .append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query\" onchange=\"confirmed(this.getAttribute('data-key'))\">\n")
+                            .append("                    <select class=\"cool-auto-complete-window-select\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("QuerySelect\" onchange=\"confirmed(this.getAttribute('data-key'))\" multiple=\"multiple\">\n")
+                            .append("                    </select>\n")
+                            .append("                </div>\n");
                 }
             // 枚举类型
             } else {
@@ -492,12 +541,17 @@ public class CoolGenerator {
                 // 时间、枚举  格式化
                 sb.append(column.getHumpName()).append("\\$");
             } else {
-                sb.append(column.getHumpName());
+                // 主键修饰
+                if (!Cools.isEmpty(column.getForeignKeyMajor())){
+                    sb.append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(column.getForeignKeyMajor());
+                } else {
+                    sb.append(column.getHumpName());
+                }
             }
             sb.append("', align: 'center',title: '")
                     .append(column.getComment());
             // 关联表
-            if (!Cools.isEmpty(column.getForeignKey())){
+            if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append("',event: '")
                         .append(column.getForeignKey())
                         .append("', style: 'text-decoration: underline;cursor:pointer");
@@ -533,7 +587,7 @@ public class CoolGenerator {
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
             // 如果有关联外健
-            if (!Cools.isEmpty(column.getForeignKey())){
+            if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append("            case '")
                         .append(column.getForeignKey())
                         .append("':\n")

@@ -100,4 +100,27 @@ public class GeneratorUtils {
         return null;
     }
 
+    /**
+     * 字符串首字母大小写转换
+     * @param str 字符串
+     * @param low true：小写   /   false：大写
+     * @return the result
+     */
+    public static String firstCharConvert(String str, boolean low){
+        if (Cools.isEmpty(str)){
+            return "";
+        }
+        String firstChar = str.substring(0, 1);
+        if (low){
+            firstChar = firstChar.toLowerCase();
+        } else {
+            firstChar = firstChar.toUpperCase();
+        }
+        return firstChar + str.substring(1);
+    }
+
+    public static String firstCharConvert(String str){
+        return firstCharConvert(str, true);
+    }
+
 }

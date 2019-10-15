@@ -1,8 +1,10 @@
 package com.core.generators.domain;
 
 import com.core.common.Cools;
+import com.core.generators.CoolGenerator;
 import com.core.generators.utils.GeneratorUtils;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,25 +17,40 @@ import java.util.regex.Pattern;
  */
 public class Column {
 
+    public static void main(String[] args) {
+//        new Column(null, null , "会员编号[sys_user.tb_name]", false, false, 11);
+        //8c8178c1f5dd47329
+        // 16 ==> 31%
+        // ?? ==> 64%
+        // ?? ==> 97%
+        String s = "dsad";
+        System.out.println(s.substring(0, s.length()-1));
+    }
+
     private String name; // 表字段名
     private String type; // 类型
     private String comment; // 备注
     private String humpName; // 小驼峰
     private boolean primaryKey; // 主键
     private boolean notNull; // 非空
+    private boolean major; // 主要
     private String foreignKey; // 外健实例名(大驼峰,如sys_user ==> User)
+    private String foreignKeyMajor; // 外键
     private List<Map<String, Object>> enums; // 枚举值
     private Integer length; // 字段长度
 
-    public Column(String name, String type, String comment, boolean primaryKey, boolean notNull, Integer length) {
+    public Column(Connection conn, String name, String type, String comment, boolean primaryKey, boolean notNull, Integer length) {
         this.name = name;
         this.type = type;
         this.comment = "";
         if (!Cools.isEmpty(comment)){
+            // 枚举
             Pattern pattern1 = Pattern.compile("(.+?)(?=\\{)");
-            Pattern pattern11 = Pattern.compile("(.+?)(?=\\[)");
             Matcher matcher1 = pattern1.matcher(comment);
+            // 外键
+            Pattern pattern11 = Pattern.compile("(.+?)(?=\\[)");
             Matcher matcher11 = pattern11.matcher(comment);
+            // 枚举
             if (matcher1.find()) {
                 this.comment = matcher1.group();
                 Pattern pattern2 = Pattern.compile("(?<=\\{)(.+?)(?=})");
@@ -51,6 +68,7 @@ public class Column {
                         }
                     }
                 }
+            //  外键
             } else if (matcher11.find()){
                 this.comment = matcher11.group();
                 Pattern pattern22 = Pattern.compile("(?<=\\[)(.+?)(?=])");
@@ -59,10 +77,28 @@ public class Column {
                     String group = matcher22.group();
                     if (!Cools.isEmpty(group)) {
                         this.foreignKey = GeneratorUtils.getNameSpace(group);
+                        List<Column> foreignColumns = new ArrayList<>();
+                        try {
+                            foreignColumns = CoolGenerator.getColumns(conn, group);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        if (!Cools.isEmpty(foreignColumns)){
+                            for (Column column : foreignColumns){
+                                if (column.isMajor()){
+                                    this.foreignKeyMajor = GeneratorUtils.firstCharConvert(column.getHumpName(), false);
+                                }
+                            }
+                        }
                     }
                 }
             } else {
                 this.comment = comment;
+            }
+            // 主要字段
+            if (comment.endsWith("*")){
+                this.comment = comment.substring(0, comment.length()-1);
+                this.major = true;
             }
         }
         this.primaryKey = primaryKey;
@@ -139,6 +175,14 @@ public class Column {
         this.foreignKey = foreignKey;
     }
 
+    public String getForeignKeyMajor() {
+        return foreignKeyMajor;
+    }
+
+    public void setForeignKeyMajor(final String foreignKeyMajor) {
+        this.foreignKeyMajor = foreignKeyMajor;
+    }
+
     public List<Map<String, Object>> getEnums() {
         return enums;
     }
@@ -155,6 +199,14 @@ public class Column {
         this.length = length;
     }
 
+    public boolean isMajor() {
+        return major;
+    }
+
+    public void setMajor(final boolean major) {
+        this.major = major;
+    }
+
     @Override
     public String toString() {
         return "Column{" +
@@ -165,7 +217,9 @@ public class Column {
                 ", primaryKey=" + primaryKey +
                 ", notNull=" + notNull +
                 ", foreignKey='" + foreignKey + '\'' +
+                ", foreignKeyMajor='" + foreignKeyMajor + '\'' +
                 ", enums=" + enums +
+                ", length=" + length +
                 '}';
     }
 }
