@@ -36,6 +36,8 @@ public class GeneratorUtils {
                 return "Boolean";
             case TINYINT:
                 return "Short";
+            case SMALLINT:
+                return "Short";
             case INTEGER:
                 return "Integer";
             case BIGINT:

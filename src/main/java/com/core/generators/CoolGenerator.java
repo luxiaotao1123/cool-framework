@@ -526,7 +526,7 @@ public class CoolGenerator {
                             .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"").append(column.getComment()).append("\" onfocus=this.blur()>\n");
                     sb.append("                <div class=\"cool-auto-complete-window\">\n")
                             .append("                    <input class=\"cool-auto-complete-window-input\" data-key=\"")
-                            .append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query\" onchange=\"confirmed(this.getAttribute('data-key'))\">\n")
+                            .append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query\" onkeyup=\"autoLoad(this.getAttribute('data-key'))\">\n")
                             .append("                    <select class=\"cool-auto-complete-window-select\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("QuerySelect\" onchange=\"confirmed(this.getAttribute('data-key'))\" multiple=\"multiple\">\n")
                             .append("                    </select>\n")
                             .append("                </div>\n");
