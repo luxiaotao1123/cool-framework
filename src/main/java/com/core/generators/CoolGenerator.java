@@ -519,6 +519,10 @@ public class CoolGenerator {
                 if (!Cools.isEmpty(column.getForeignKeyMajor())){
                     sb.append(" style=\"display: none\"");
                 }
+                // 时间字段去除历史记录
+                if ("Date".equals(column.getType())){
+                    sb.append(" autocomplete=\"off\"");
+                }
                 sb.append(">\n");
                 // 关联外键
                 if (!Cools.isEmpty(column.getForeignKeyMajor())){
