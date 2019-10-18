@@ -478,7 +478,9 @@ public class CoolGenerator {
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
             sb.append("        <div class=\"layui-inline\"  style=\"width:");
-            if (null == column.getLength() || column.getLength() <= 256){
+            if (column.isImage()){
+                sb.append("97%");
+            } else if (null == column.getLength() || column.getLength() <= 256){
                 sb.append("31%");
             } else if (column.getLength() <= 1024){
                 sb.append("64%");
