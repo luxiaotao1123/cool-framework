@@ -535,6 +535,10 @@ public class CoolGenerator {
                             .append("                    </select>\n")
                             .append("                </div>\n");
                 }
+                // 图片字段
+                if (column.isImage()){
+                    sb.append("                <img id=\"").append(column.getHumpName()).append("Img\" class=\"cool-img\" src=\"\" onclick=\"reviewImg(this.src)\" style=\"display: none\">\n");
+                }
             // 枚举类型
             } else {
                 sb.append("                <select id=\"")
@@ -640,7 +644,7 @@ public class CoolGenerator {
                         .append("                            method: 'POST',\n")
                         .append("                            success: function (res) {\n")
                         .append("                                if (res.code === 200){\n")
-                        .append("                                    setFormVal(layer.getChildFrame('#detail', index), res.data);\n")
+                        .append("                                    setFormVal(layer.getChildFrame('#detail', index), res.data, true);\n")
                         .append("                                    top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);\n")
                         .append("                                    layer.getChildFrame('#data-detail-submit', index).hide();\n")
                         .append("                                    detailScreen(index);\n")

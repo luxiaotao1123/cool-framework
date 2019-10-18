@@ -24,6 +24,7 @@ public class Column {
     private boolean primaryKey; // 主键
     private boolean notNull; // 非空
     private boolean major; // 主要
+    private boolean image; // 图片
     private String foreignKey; // 外健实例名(大驼峰,如sys_user ==> User)
     private String foreignKeyMajor; // 外键
     private List<Map<String, Object>> enums; // 枚举值
@@ -86,9 +87,14 @@ public class Column {
                 this.comment = comment;
             }
             // 主要字段
-            if (comment.endsWith("*")){
-                this.comment = comment.substring(0, comment.length()-1);
+            if (comment.endsWith("(*)")){
+                this.comment = comment.substring(0, comment.length()-3);
                 this.major = true;
+            }
+            // 图片字段
+            if (comment.endsWith("(img)")){
+                this.comment = comment.substring(0, comment.length()-5);
+                this.image = true;
             }
         }
         this.primaryKey = primaryKey;
@@ -197,6 +203,14 @@ public class Column {
         this.major = major;
     }
 
+    public boolean isImage() {
+        return image;
+    }
+
+    public void setImage(final boolean image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "Column{" +
@@ -206,10 +220,13 @@ public class Column {
                 ", humpName='" + humpName + '\'' +
                 ", primaryKey=" + primaryKey +
                 ", notNull=" + notNull +
+                ", major=" + major +
+                ", image=" + image +
                 ", foreignKey='" + foreignKey + '\'' +
                 ", foreignKeyMajor='" + foreignKeyMajor + '\'' +
                 ", enums=" + enums +
                 ", length=" + length +
                 '}';
     }
+
 }

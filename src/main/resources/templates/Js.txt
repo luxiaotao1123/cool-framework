@@ -151,7 +151,7 @@ layui.use(['table','laydate', 'form'], function(){
                     shadeClose: false,
                     content: '/@{SIMPLEENTITYNAME}_detail',
                     success: function(layero, index){
-                        setFormVal(layer.getChildFrame('#detail', index), data);
+                        setFormVal(layer.getChildFrame('#detail', index), data, true);
                         top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);
                         layer.getChildFrame('#data-detail-submit', index).hide();
                         detailScreen(index);
@@ -169,7 +169,7 @@ layui.use(['table','laydate', 'form'], function(){
                     shadeClose: false,
                     content: '/@{SIMPLEENTITYNAME}_detail',
                     success: function(layero, index){
-                        setFormVal(layer.getChildFrame('#detail', index), data);
+                        setFormVal(layer.getChildFrame('#detail', index), data, false);
                         top.convertDisabled(layer.getChildFrame('#data-detail :input', index), false);
                         detailScreen(index);
                         layero.find('iframe')[0].contentWindow.layui.form.render('select');
@@ -262,9 +262,20 @@ function tableReload(child) {
     });
 }
 
-function setFormVal(el, data) {
+function setFormVal(el, data, showImg) {
     for (var val in data) {
-        el.find(":input[id='" + val + "']").val(data[val]);
+        var find = el.find(":input[id='" + val + "']");
+        find.val(data[val]);
+        if (showImg){
+            var next = find.next();
+            if (next.get(0)){
+                if (next.get(0).localName === "img") {
+                    find.hide();
+                    next.attr("src", data[val]);
+                    next.show();
+                }
+            }
+        }
     }
 }
 
