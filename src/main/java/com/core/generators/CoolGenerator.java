@@ -413,10 +413,10 @@ public class CoolGenerator {
         String defaultMajor = "id";
         for (Column column: columns){
             if (column.isPrimaryKey()){
-                defaultMajor = column.getHumpName();
+                defaultMajor = column.getName();
             }
             if (column.isMajor()){
-                return column.getHumpName();
+                return column.getName();
             }
         }
         return defaultMajor;
