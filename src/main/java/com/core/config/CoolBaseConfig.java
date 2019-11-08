@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * Created by vincent on 2019-06-10
  */
 @Configuration
-public class MybatisPlusConfig {
+public class CoolBaseConfig {
 
     @Bean
     public PaginationInterceptor paginationInterceptor() {
