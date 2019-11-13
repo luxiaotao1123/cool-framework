@@ -488,7 +488,12 @@ public class CoolGenerator {
                 sb.append("97%");
             }
             sb.append(";\">\n")
-                    .append("            <label class=\"layui-form-label\">");
+                    .append("            <label class=\"layui-form-label");
+            // 注释过长适配：长度>=6时字体变小
+            if (column.getComment().length() > 5) {
+                sb.append("\" style=\"font-size: x-small");
+            }
+            sb.append("\">");
             // 非空判断
             if (column.isNotNull()){
                 sb.append("<span class=\"not-null\">*</span>");
