@@ -56,6 +56,8 @@ public class GeneratorUtils {
                 return "Date";
             case BLOB:
                 return "String";
+            case LONGVARCHAR:
+                return "String";
             default:
                 return null;
         }
