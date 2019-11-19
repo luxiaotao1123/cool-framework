@@ -325,6 +325,23 @@ public class CoolGenerator {
                     .append("\n")
                     .append("\n");
         }
+
+        // default constructor
+        sb.append("    public ").append(fullEntityName).append("() {}\n\n");
+        // full constructor
+        sb.append("    public ").append(fullEntityName).append("(");
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            sb.append(column.getType()).append(" ").append(column.getHumpName()).append(",");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        sb.append(") {\n");
+        for (Column column : columns){
+            if (column.isPrimaryKey()){ continue;}
+            sb.append("        this.").append(column.getHumpName()).append(" = ").append(column.getHumpName()).append(";   // ").append(column.getComment()).append(column.isNotNull()?"[非空]":"").append("\n");
+        }
+        sb.append("    }\n\n");
+
         // get set
         for (Column column : columns){
             // get
