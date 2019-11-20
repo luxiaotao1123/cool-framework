@@ -30,7 +30,7 @@ public class Column {
     private List<Map<String, Object>> enums; // 枚举值
     private Integer length; // 字段长度
 
-    public Column(Connection conn, String name, String type, String comment, boolean primaryKey, boolean notNull, Integer length) {
+    public Column(Connection conn, String name, String type, String comment, boolean primaryKey, boolean notNull, Integer length, boolean init) {
         this.name = name;
         this.type = type;
         this.comment = "";
@@ -69,10 +69,12 @@ public class Column {
                     if (!Cools.isEmpty(group)) {
                         this.foreignKey = GeneratorUtils.getNameSpace(group);
                         List<Column> foreignColumns = new ArrayList<>();
-                        try {
-                            foreignColumns = CoolGenerator.getColumns(conn, group);
-                        } catch (Exception e){
-                            e.printStackTrace();
+                        if (init) {
+                            try {
+                                foreignColumns = CoolGenerator.getColumns(conn, group, false);
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
                         }
                         if (!Cools.isEmpty(foreignColumns)){
                             for (Column column : foreignColumns){

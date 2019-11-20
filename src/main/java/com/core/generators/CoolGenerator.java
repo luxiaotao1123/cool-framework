@@ -197,10 +197,10 @@ public class CoolGenerator {
     private void gainDbInfo() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
-        this.columns = getColumns(conn, table);
+        this.columns = getColumns(conn, table, true);
     }
 
-    public static List<Column> getColumns(Connection conn, String table) throws Exception {
+    public static List<Column> getColumns(Connection conn, String table, boolean init) throws Exception {
         List<Column> result = new ArrayList<>();
         PreparedStatement ps = conn.prepareStatement("select * from " + table);
         ResultSetMetaData meta = ps.executeQuery().getMetaData();
@@ -217,7 +217,8 @@ public class CoolGenerator {
                         resultSet.getString("Comment"),
                         resultSet.getString("Key").equals("PRI"),
                         resultSet.getString("Null").equals("NO"),
-                        GeneratorUtils.getColumnLength(resultSet.getString("Type"))
+                        GeneratorUtils.getColumnLength(resultSet.getString("Type")),
+                        init
                 ));
             }
 //            result.forEach(column -> System.out.println(column.toString()));
@@ -650,38 +651,40 @@ public class CoolGenerator {
             if (column.isPrimaryKey()){ continue;}
             // 如果有关联外健
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                sb.append("            case '")
-                        .append(column.getForeignKey())
-                        .append("':\n")
-                        .append("                layer.open({\n")
-                        .append("                    type: 2,\n")
-                        .append("                    title: '").append(column.getComment().substring(0, column.getComment().length()-2)).append("详情',\n")
-                        .append("                    maxmin: true,\n")
-                        .append("                    area: [top.detailHeight, top.detailWidth],\n")
-                        .append("                    shadeClose: false,\n")
-                        .append("                    content: '").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("_detail',\n")
-                        .append("                    success: function(layero, index){\n")
-                        .append("                        \\$.ajax({\n")
-                        .append("                            url: \"/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/\"+ data.").append(column.getHumpName()).append(" +\"/auth\",\n")
-                        .append("                            headers: {'token': localStorage.getItem('token')},\n")
-                        .append("                            data: data,\n")
-                        .append("                            method: 'POST',\n")
-                        .append("                            success: function (res) {\n")
-                        .append("                                if (res.code === 200){\n")
-                        .append("                                    setFormVal(layer.getChildFrame('#detail', index), res.data, true);\n")
-                        .append("                                    top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);\n")
-                        .append("                                    layer.getChildFrame('#data-detail-submit', index).hide();\n")
-                        .append("                                    detailScreen(index);\n")
-                        .append("                                    layero.find('iframe')[0].contentWindow.layui.form.render('select');\n")
-                        .append("                                } else if (res.code === 403){\n")
-                        .append("                                    parent.location.href = \"/\";\n")
-                        .append("                                }else {\n")
-                        .append("                                    layer.msg(res.msg)\n")
-                        .append("                                }\n")
-                        .append("                            }\n")
-                        .append("                        })\n")
-                        .append("                    }\n")
-                        .append("                });\n")
+                sb.append("            case '").append(column.getForeignKey()).append("':\n")
+                        .append("                var param = top.reObject(data).").append(column.getHumpName()).append(";\n")
+                        .append("                if (param === undefined) {\n")
+                        .append("                    layer.msg(\"无数据\");\n")
+                        .append("                } else {\n")
+                        .append("                   layer.open({\n")
+                        .append("                       type: 2,\n")
+                        .append("                       title: '").append(column.getComment().substring(0, column.getComment().length()-2)).append("详情',\n")
+                        .append("                       maxmin: true,\n")
+                        .append("                       area: [top.detailHeight, top.detailWidth],\n")
+                        .append("                       shadeClose: false,\n")
+                        .append("                       content: '").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("_detail',\n")
+                        .append("                       success: function(layero, index){\n")
+                        .append("                           \\$.ajax({\n")
+                        .append("                               url: \"/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/\"+ param").append(" +\"/auth\",\n")
+                        .append("                               headers: {'token': localStorage.getItem('token')},\n")
+                        .append("                               method: 'GET',\n")
+                        .append("                               success: function (res) {\n")
+                        .append("                                   if (res.code === 200){\n")
+                        .append("                                       setFormVal(layer.getChildFrame('#detail', index), res.data, true);\n")
+                        .append("                                       top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);\n")
+                        .append("                                       layer.getChildFrame('#data-detail-submit', index).hide();\n")
+                        .append("                                       detailScreen(index);\n")
+                        .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('select');\n")
+                        .append("                                   } else if (res.code === 403){\n")
+                        .append("                                       parent.location.href = \"/\";\n")
+                        .append("                                   }else {\n")
+                        .append("                                       layer.msg(res.msg)\n")
+                        .append("                                   }\n")
+                        .append("                               }\n")
+                        .append("                           })\n")
+                        .append("                       }\n")
+                        .append("                   });\n")
+                        .append("                }\n")
                         .append("                break;\n");
             }
         }
