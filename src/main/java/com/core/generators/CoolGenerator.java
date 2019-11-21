@@ -264,13 +264,12 @@ public class CoolGenerator {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        StringBuilder entityIm = new StringBuilder();
+        StringBuilder entityIm = new StringBuilder("import com.core.common.Cools;");
         boolean setTableField = true;
         boolean setTableId = true;
         for (Column column : columns){
             if (column.getType().equals("Date")){
                 entityIm.append("import java.text.SimpleDateFormat;\n")
-                        .append("import com.core.common.Cools;\n")
                         .append("import java.util.Date;\n");
             }
 
@@ -342,6 +341,20 @@ public class CoolGenerator {
             sb.append("        this.").append(column.getHumpName()).append(" = ").append(column.getHumpName()).append(";   // ").append(column.getComment()).append(column.isNotNull()?"[非空]":"").append("\n");
         }
         sb.append("    }\n\n");
+        // constructor tips
+        sb.append("//    ").append(fullEntityName).append(" ").append(simpleEntityName).append(" = new ").append(fullEntityName).append("(\n");
+        for (int i = 0; i<columns.size(); i++) {
+            if (columns.get(i).isPrimaryKey()){ continue;}
+            sb.append("//            null");
+            if (i < columns.size()-1){
+                sb.append(",");
+            }
+            sb.append("    // ").append(columns.get(i).getComment());
+            if (i < columns.size()-1){
+                sb.append("\n");
+            }
+        }
+        sb.append("\n//    );\n\n");
 
         // get set
         for (Column column : columns){
