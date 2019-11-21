@@ -349,7 +349,7 @@ public class CoolGenerator {
             if (i < columns.size()-1){
                 sb.append(",");
             }
-            sb.append("    // ").append(columns.get(i).getComment());
+            sb.append("    // ").append(columns.get(i).getComment()).append(columns.get(i).isNotNull()?"[非空]":"");
             if (i < columns.size()-1){
                 sb.append("\n");
             }
