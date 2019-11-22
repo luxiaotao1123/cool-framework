@@ -338,7 +338,7 @@ public class CoolGenerator {
         sb.append(") {\n");
         for (Column column : columns){
             if (column.isPrimaryKey()){ continue;}
-            sb.append("        this.").append(column.getHumpName()).append(" = ").append(column.getHumpName()).append(";   // ").append(column.getComment()).append(column.isNotNull()?"[非空]":"").append("\n");
+            sb.append("        this.").append(column.getHumpName()).append(" = ").append(column.getHumpName()).append(";\n");
         }
         sb.append("    }\n\n");
         // constructor tips
@@ -413,7 +413,7 @@ public class CoolGenerator {
                         .append("            return ").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(".get").append(column.getForeignKeyMajor()).append("();\n")
                         .append("        }\n")
                         .append("        return null;\n")
-                        .append("    }\n");
+                        .append("    }\n\n");
             }
 
             // set
