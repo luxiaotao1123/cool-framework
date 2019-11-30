@@ -22,12 +22,24 @@ public class R extends HashMap<String, Object> {
         return parse(BaseRes.OK);
     }
 
+    public static R ok(String msg){
+        R r = ok();
+        r.put(MSG, msg);
+        return r;
+    }
+
     public static R ok(Object obj){
         return parse(BaseRes.OK).add(obj);
     }
 
     public static R error(){
         return parse(BaseRes.ERROR);
+    }
+
+    public static R error(String msg){
+        R r = error();
+        r.put(MSG, msg);
+        return r;
     }
 
     public R add(Object obj){
