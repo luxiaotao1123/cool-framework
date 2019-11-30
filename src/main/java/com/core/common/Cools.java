@@ -101,8 +101,12 @@ public class Cools {
     public static <T> T conver(Map<? extends String, ?> map, Class<T> cls){
         T instance = null;
         try {
-            instance = cls.newInstance();
-        } catch (IllegalAccessException | InstantiationException e) {
+            Constructor<T> constructor = cls.getDeclaredConstructor();
+            boolean constructorAccessible = constructor.isAccessible();
+            constructor.setAccessible(true);
+            instance = constructor.newInstance();
+            constructor.setAccessible(constructorAccessible);
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
         Class<?> prototype = cls;
