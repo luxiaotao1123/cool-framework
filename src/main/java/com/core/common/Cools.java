@@ -98,7 +98,7 @@ public class Cools {
     /**
      * map 转 对象
      */
-    public static <T> T conver(Class<T> cls, Map<? extends String, ?> map){
+    public static <T> T conver(Map<? extends String, ?> map, Class<T> cls){
         T instance = null;
         try {
             instance = cls.newInstance();
