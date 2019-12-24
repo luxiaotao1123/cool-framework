@@ -547,8 +547,7 @@ public class CoolGenerator {
                 if ("Date".equals(column.getType())){
                     sb.append("\\$");
                 }
-                sb.append("\" class=\"layui-input\" type=\"text\" placeholder=\"")
-                        .append(column.getComment()).append("\"");
+                sb.append("\" class=\"layui-input\" type=\"text\"");
                 // 非空判断
                 if (column.isNotNull()){
                     sb.append(" lay-verify=\"required\" ");
@@ -565,7 +564,8 @@ public class CoolGenerator {
                 // 关联外键
                 if (!Cools.isEmpty(column.getForeignKeyMajor())){
                     sb.append("                <input id=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(column.getForeignKeyMajor())
-                            .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"").append(column.getComment()).append("\" onfocus=this.blur()>\n");
+                            .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"请输入...\" onfocus=this.blur()>\n");
+//                            .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" onfocus=this.blur()>\n");
                     sb.append("                <div class=\"cool-auto-complete-window\">\n")
                             .append("                    <input class=\"cool-auto-complete-window-input\" data-key=\"")
                             .append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query\" onkeyup=\"autoLoad(this.getAttribute('data-key'))\">\n")
