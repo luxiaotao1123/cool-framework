@@ -405,7 +405,7 @@ public class CoolGenerator {
 
             // 外键修饰
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                sb.append("    public String get").append(column.getForeignKey()).append(column.getForeignKeyMajor()).append("(){\n")
+                sb.append("    public String get").append(column.getHumpName().substring(0, 1).toUpperCase()).append("\\$").append("(){\n")
                         .append("        ").append(column.getForeignKey()).append("Service service = SpringUtils.getBean(").append(column.getForeignKey()).append("Service.class);\n")
                         .append("        ").append(column.getForeignKey()).append(" ").append(GeneratorUtils.firstCharConvert(column.getForeignKey()))
                         .append(" = service.selectById(this.").append(column.getHumpName()).append(");\n")
@@ -563,7 +563,7 @@ public class CoolGenerator {
                 sb.append(">\n");
                 // 关联外键
                 if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                    sb.append("                <input id=\"").append(column.getHumpName()).append("Click")
+                    sb.append("                <input id=\"").append(column.getHumpName()).append("\\$")
                             .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"请输入...\" onfocus=this.blur()>\n");
 //                            .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" onfocus=this.blur()>\n");
                     sb.append("                <div class=\"cool-auto-complete-window\">\n")
@@ -619,7 +619,7 @@ public class CoolGenerator {
             } else {
                 // 主键修饰
                 if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                    sb.append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(column.getForeignKeyMajor());
+                    sb.append(column.getHumpName()).append("\\$");
                 } else {
                     sb.append(column.getHumpName());
                 }
@@ -629,7 +629,7 @@ public class CoolGenerator {
             // 关联表
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append("',event: '")
-                        .append(column.getForeignKey())
+                        .append(column.getHumpName())
                         .append("', style: 'text-decoration: underline;cursor:pointer");
             }
             sb.append("'}\n");
@@ -664,7 +664,7 @@ public class CoolGenerator {
             if (column.isPrimaryKey()){ continue;}
             // 如果有关联外健
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                sb.append("            case '").append(column.getForeignKey()).append("':\n")
+                sb.append("            case '").append(column.getHumpName()).append("':\n")
                         .append("                var param = top.reObject(data).").append(column.getHumpName()).append(";\n")
                         .append("                if (param === undefined) {\n")
                         .append("                    layer.msg(\"无数据\");\n")
