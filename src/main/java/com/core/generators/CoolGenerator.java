@@ -405,7 +405,7 @@ public class CoolGenerator {
 
             // 外键修饰
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                sb.append("    public String get").append(column.getHumpName().substring(0, 1).toUpperCase()).append("\\$").append("(){\n")
+                sb.append("    public String get").append(column.getHumpName().substring(0, 1).toUpperCase()).append(column.getHumpName().substring(1)).append("\\$").append("(){\n")
                         .append("        ").append(column.getForeignKey()).append("Service service = SpringUtils.getBean(").append(column.getForeignKey()).append("Service.class);\n")
                         .append("        ").append(column.getForeignKey()).append(" ").append(GeneratorUtils.firstCharConvert(column.getForeignKey()))
                         .append(" = service.selectById(this.").append(column.getHumpName()).append(");\n")
