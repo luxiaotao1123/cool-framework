@@ -55,7 +55,7 @@ public class R extends HashMap<String, Object> {
         if(msg.length==2){
             return new R(Integer.parseInt(msg[0]),msg[1]);
         }else{
-            return parse(BaseRes.ERROR);
+            return parse("500-".concat(message));
         }
     }
 
