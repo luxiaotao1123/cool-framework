@@ -54,7 +54,6 @@ public class AesUtils {
             byte[] original = cipher.doFinal(RadixTools.hexStringToBytes(data));
             return new String(original,DEFAULT_CHARSET);
         } catch (Exception ex) {
-            ex.printStackTrace();
             return null;
         }
     }
