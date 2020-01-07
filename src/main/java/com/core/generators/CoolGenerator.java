@@ -410,7 +410,7 @@ public class CoolGenerator {
                         .append("        ").append(column.getForeignKey()).append(" ").append(GeneratorUtils.firstCharConvert(column.getForeignKey()))
                         .append(" = service.selectById(this.").append(column.getHumpName()).append(");\n")
                         .append("        if (!Cools.isEmpty(").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(")){\n")
-                        .append("            return ").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(".get").append(column.getForeignKeyMajor()).append("();\n")
+                        .append("            return String.valueOf(").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append(".get").append(column.getForeignKeyMajor()).append("());\n")
                         .append("        }\n")
                         .append("        return null;\n")
                         .append("    }\n\n");

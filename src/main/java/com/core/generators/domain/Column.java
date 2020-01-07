@@ -82,6 +82,9 @@ public class Column {
                                     this.foreignKeyMajor = GeneratorUtils.firstCharConvert(column.getHumpName(), false);
                                 }
                             }
+                            if (Cools.isEmpty(this.foreignKeyMajor)){
+                                this.foreignKeyMajor = "Id";
+                            }
                         }
                     }
                 }
