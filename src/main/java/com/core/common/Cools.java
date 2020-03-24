@@ -228,4 +228,27 @@ public class Cools {
         return array == null ? null : array.clone();
     }
 
+    /**
+     * map操作
+     */
+    public static CoolMap add(String key,Object value){
+        CoolMap map = new CoolMap();
+        map.put(key, value);
+        return map;
+    }
+
+    public static class CoolMap extends HashMap<String, Object>{
+
+        public CoolMap add(String key,Object value){
+            this.put(key, value);
+            return this;
+        }
+
+        public CoolMap $(String key,Object value){
+            this.put(key, value);
+            return this;
+        }
+
+    }
+
 }
