@@ -675,7 +675,7 @@ public class CoolGenerator {
                         .append("                       maxmin: true,\n")
                         .append("                       area: [top.detailHeight, top.detailWidth],\n")
                         .append("                       shadeClose: false,\n")
-                        .append("                       content: '").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("_detail',\n")
+                        .append("                       content: '../").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("_detail.html',\n")
                         .append("                       success: function(layero, index){\n")
                         .append("                           \\$.ajax({\n")
                         .append("                               url: \"/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/\"+ param").append(" +\"/auth\",\n")
