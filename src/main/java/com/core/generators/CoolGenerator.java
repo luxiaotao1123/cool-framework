@@ -283,6 +283,13 @@ public class CoolGenerator {
                         .append("\n");
             }
 
+            // swagger
+            entityIm.append("import io.swagger.annotations.ApiModelProperty;\n");
+            sb.append("    @ApiModelProperty(value= \"")
+                    .append(column.getWholeComment())
+                    .append("\")\n");
+
+
             // 主键修饰
             if (column.isPrimaryKey()){
                 if (setTableId){
