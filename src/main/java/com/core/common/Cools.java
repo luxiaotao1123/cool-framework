@@ -255,15 +255,15 @@ public class Cools {
 
     public static String md5(String string){
         try{
-            MessageDigest md5=MessageDigest.getInstance("MD5");
-            byte[] bytes=md5.digest(string.getBytes(StandardCharsets.UTF_8));
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] bytes = md5.digest(string.getBytes(StandardCharsets.UTF_8));
             char[] chars = new char[bytes.length * 2];
             for (int i = 0; i < bytes.length; i++) {
                 int b = bytes[i];
                 chars[i * 2] = hexDigits[(b & 0xF0) >> 4];
                 chars[i * 2 + 1] = hexDigits[b & 0x0F];
             }
-            return new String(chars);
+            return new String(chars).toLowerCase();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("md5加密失败,str=".concat(string));

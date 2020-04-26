@@ -21,16 +21,6 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     @Autowired
     private @{ENTITYNAME}Service @{SIMPLEENTITYNAME}Service;
 
-    @RequestMapping("/@{SIMPLEENTITYNAME}")
-    public String index(){
-        return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}";
-    }
-
-    @RequestMapping("/@{SIMPLEENTITYNAME}_detail")
-    public String detail(){
-        return "@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}_detail";
-    }
-
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/{id}/auth")
     @ManagerAuth
     public R get(@PathVariable("id") Long id) {
