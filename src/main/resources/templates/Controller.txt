@@ -11,12 +11,11 @@ import com.core.common.Cools;
 import com.core.common.R;
 import com.core.controller.AbstractBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@Controller
+@RestController
 public class @{ENTITYNAME}Controller extends AbstractBaseController {
 
     @Autowired
@@ -33,14 +32,12 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/{id}/auth")
-    @ResponseBody
     @ManagerAuth
     public R get(@PathVariable("id") Long id) {
         return R.ok(@{SIMPLEENTITYNAME}Service.selectById(String.valueOf(id)));
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/list/auth")
-    @ResponseBody
     @ManagerAuth
     public R list(@RequestParam(defaultValue = "1")Integer curr,
                   @RequestParam(defaultValue = "10")Integer limit,
@@ -65,7 +62,6 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/edit/auth")
-    @ResponseBody
     @ManagerAuth
     public R edit(@{ENTITYNAME} @{SIMPLEENTITYNAME}) {
         if (Cools.isEmpty(@{SIMPLEENTITYNAME})){
@@ -80,7 +76,6 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/add/auth")
-    @ResponseBody
     @ManagerAuth
     public R add(@{ENTITYNAME} @{SIMPLEENTITYNAME}) {
         @{SIMPLEENTITYNAME}Service.insert(@{SIMPLEENTITYNAME});
@@ -88,7 +83,6 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     }
 
 	@RequestMapping(value = "/@{SIMPLEENTITYNAME}/update/auth")
-    @ResponseBody
     public R update(@{ENTITYNAME} @{SIMPLEENTITYNAME}){
         if (Cools.isEmpty(@{SIMPLEENTITYNAME}) || null==@{SIMPLEENTITYNAME}.getId()){
             return R.error();
@@ -98,7 +92,6 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/delete/auth")
-    @ResponseBody
     @ManagerAuth
     public R delete(Integer[] ids){
         if (Cools.isEmpty(ids)){
@@ -109,7 +102,6 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/export/auth")
-    @ResponseBody
     @ManagerAuth
     public R export(@RequestBody JSONObject param){
         List<String> fields = JSONObject.parseArray(param.getJSONArray("fields").toJSONString(), String.class);
@@ -121,7 +113,6 @@ public class @{ENTITYNAME}Controller extends AbstractBaseController {
     }
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}Query/auth")
-    @ResponseBody
     @ManagerAuth
     public R query(String condition) {
         EntityWrapper<@{ENTITYNAME}> wrapper = new EntityWrapper<>();
