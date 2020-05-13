@@ -46,6 +46,10 @@ public class GeneratorUtils {
                 return "Double";
             case DECIMAL:
                 return "Double";
+            case NCHAR:
+                return "String";
+            case NVARCHAR:
+                return "String";
             case CHAR:
                 return "String";
             case VARCHAR:

@@ -71,7 +71,7 @@ public class Column {
                         List<Column> foreignColumns = new ArrayList<>();
                         if (init) {
                             try {
-                                foreignColumns = CoolGenerator.getColumns(conn, group, false);
+                                foreignColumns = CoolGenerator.getSqlServerColumns(conn, group, false);
                             } catch (Exception e){
                                 e.printStackTrace();
                             }

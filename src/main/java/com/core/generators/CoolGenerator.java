@@ -102,12 +102,12 @@ public class CoolGenerator {
                     break;
                 case "Html":
                     pass = html;
-                    directory = HTML_DIR + "/view/" + simpleEntityName + "/";
+                    directory = HTML_DIR + "/views/" + simpleEntityName + "/";
                     fileName = simpleEntityName+".html";
                     break;
                 case "HtmlDetail":
                     pass = htmlDetail;
-                    directory = HTML_DIR + "/view/" + simpleEntityName + "/";
+                    directory = HTML_DIR + "/views/" + simpleEntityName + "/";
                     fileName = simpleEntityName+"_detail.html";
                     break;
                 case "Js":
@@ -195,12 +195,13 @@ public class CoolGenerator {
     }
 
     private void gainDbInfo() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
-        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
-        this.columns = getColumns(conn, table, true);
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+        Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
+        this.columns = getSqlServerColumns(conn, table, true);
     }
 
-    public static List<Column> getColumns(Connection conn, String table, boolean init) throws Exception {
+    // mysql
+    public static List<Column> getMysqlColumns(Connection conn, String table, boolean init) throws Exception {
         List<Column> result = new ArrayList<>();
         PreparedStatement ps = conn.prepareStatement("select * from " + table);
         ResultSetMetaData meta = ps.executeQuery().getMetaData();
@@ -223,6 +224,49 @@ public class CoolGenerator {
             }
 //            result.forEach(column -> System.out.println(column.toString()));
         }
+        return result;
+    }
+
+    // sqlserver
+    public static List<Column> getSqlServerColumns(Connection conn, String table, boolean init) throws Exception {
+        List<Column> result = new ArrayList<>();
+        PreparedStatement ps = conn.prepareStatement("select * from " + table);
+        ResultSetMetaData meta = ps.executeQuery().getMetaData();
+        // 单表字段数量
+        int count = meta.getColumnCount();
+        StringBuilder sql = new StringBuilder("SELECT \n" +
+                "       'Field'= a.name,\n" +
+                "       'Comment'= isnull(g.[value],''),\n" +
+                "       'Key'= case when COLUMNPROPERTY( a.id,a.name,'IsIdentity')=1 then 'PRI' else '' end,\n" +
+                "       'Type'= b.name,\n" +
+                "       'Length'= COLUMNPROPERTY(a.id,a.name,'PRECISION'),\n" +
+                "       'Decimals'= isnull(COLUMNPROPERTY(a.id,a.name,'Scale'),0),\n" +
+                "       'Null'= case when a.isnullable=1 then 'Yes' else 'No' end,\n" +
+                "       'Default' = isnull(e.text,'')\n" +
+                "FROM  syscolumns a\n" +
+                "LEFT JOIN  systypes b on a.xusertype=b.xusertype\n" +
+                "INNER JOIN sysobjects d on  a.id=d.id  and d.xtype='U' and  d.name<>'dtproperties'\n" +
+                "LEFT JOIN  syscomments e on  a.cdefault=e.id\n" +
+                "LEFT JOIN  sys.extended_properties g on  a.id=G.major_id and a.colid=g.minor_id  \n" +
+                "LEFT JOIN  sys.extended_properties f on  d.id=f.major_id and f.minor_id=0 where d.name = '")
+                .append(table).append("' ORDER BY a.colorder ASC");
+        ResultSet resultSet = conn.prepareStatement(sql.toString()).executeQuery();
+        for (int i = 1; i < count + 1; i++) {
+            String columnName = meta.getColumnName(i);
+            if (resultSet.next() && columnName.equals(resultSet.getString("Field"))){
+                result.add(new Column(
+                        conn,
+                        meta.getColumnName(i),
+                        GeneratorUtils.getType(meta.getColumnType(i)),
+                        resultSet.getString("Comment"),
+                        resultSet.getString("Key").equals("PRI"),
+                        resultSet.getString("Null").equals("NO"),
+                        GeneratorUtils.getColumnLength(resultSet.getString("Type")),
+                        init
+                ));
+            }
+        }
+        result.forEach(column -> System.out.println(column.toString()));
         return result;
     }
 

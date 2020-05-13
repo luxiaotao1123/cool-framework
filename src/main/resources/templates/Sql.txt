@@ -1,4 +1,5 @@
 -- save @{SIMPLEENTITYNAME} record
+-- mysql
 insert into `sys_resource` ( `code`, `name`, `resource_id`, `level`, `sort`, `status`) values ( '@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.html', '@{SIMPLEENTITYNAME}管理', null , '2', null , '1');
 
 insert into `sys_resource` ( `code`, `name`, `resource_id`, `level`, `sort`, `status`) values ( '@{SIMPLEENTITYNAME}#view', '查看', '', '3', '0', '1');
@@ -7,3 +8,13 @@ insert into `sys_resource` ( `code`, `name`, `resource_id`, `level`, `sort`, `st
 insert into `sys_resource` ( `code`, `name`, `resource_id`, `level`, `sort`, `status`) values ( '@{SIMPLEENTITYNAME}#btn-delete', '删除', '', '3', '3', '1');
 insert into `sys_resource` ( `code`, `name`, `resource_id`, `level`, `sort`, `status`) values ( '@{SIMPLEENTITYNAME}#btn-export', '导出', '', '3', '4', '1');
 insert into `sys_resource` ( `code`, `name`, `resource_id`, `level`, `sort`, `status`) values ( '@{SIMPLEENTITYNAME}#btn-into', '导入', '', '3', '5', '1');
+
+-- sqlserver
+insert [dbo].[sys_resource] ( [code], [name], [resource_id], [level], [sort], [status]) values ( N'@{SIMPLEENTITYNAME}/@{SIMPLEENTITYNAME}.html', N'@{SIMPLEENTITYNAME}管理', null, '2', null, '1');
+
+insert [dbo].[sys_resource] ( [code], [name], [resource_id], [level], [sort], [status]) values ( N'@{SIMPLEENTITYNAME}#view', N'查看', '', '3', '0', '1');
+insert [dbo].[sys_resource] ( [code], [name], [resource_id], [level], [sort], [status]) values ( N'@{SIMPLEENTITYNAME}#btn-add', N'新增', '', '3', '1', '1');
+insert [dbo].[sys_resource] ( [code], [name], [resource_id], [level], [sort], [status]) values ( N'@{SIMPLEENTITYNAME}#btn-edit', N'编辑', '', '3', '2', '1');
+insert [dbo].[sys_resource] ( [code], [name], [resource_id], [level], [sort], [status]) values ( N'@{SIMPLEENTITYNAME}#btn-delete', N'删除', '', '3', '3', '1');
+insert [dbo].[sys_resource] ( [code], [name], [resource_id], [level], [sort], [status]) values ( N'@{SIMPLEENTITYNAME}#btn-export', N'导出', '', '3', '4', '1');
+insert [dbo].[sys_resource] ( [code], [name], [resource_id], [level], [sort], [status]) values ( N'@{SIMPLEENTITYNAME}#btn-into', N'导入', '', '3', '5', '1');
