@@ -271,7 +271,7 @@ public class CoolGenerator {
                         resultSet.getString("Comment"),
                         resultSet.getString("Key").equals("PRI"),
                         resultSet.getString("Main").equals("PRI"),
-                        resultSet.getString("Null").equals("NO"),
+                        resultSet.getString("Null").equals("No"),
                         GeneratorUtils.getColumnLength(resultSet.getString("Type")),
                         init
                 ));
