@@ -131,4 +131,15 @@ public class GeneratorUtils {
         return firstCharConvert(str, true);
     }
 
+    /** 驼峰转下划线 */
+    public static String humpToLine(String str) {
+        Matcher matcher = Pattern.compile("[A-Z]").matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
 }

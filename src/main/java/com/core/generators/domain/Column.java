@@ -30,7 +30,7 @@ public class Column {
     private List<Map<String, Object>> enums; // 枚举值
     private Integer length; // 字段长度
 
-    public Column(Connection conn, String name, String type, String comment, boolean primaryKey, boolean notNull, Integer length, boolean init) {
+    public Column(Connection conn, String name, String type, String comment, boolean primaryKey, boolean mainKey, boolean notNull, Integer length, boolean init) {
         this.name = name;
         this.type = type;
         this.comment = "";
@@ -102,7 +102,11 @@ public class Column {
                 this.image = true;
             }
         }
-        this.primaryKey = primaryKey;
+        if (primaryKey || mainKey){
+            this.primaryKey = true;
+        } else {
+            this.primaryKey = false;
+        }
         this.notNull = notNull;
         this.length = length;
         this.humpName = GeneratorUtils._convert(name);

@@ -59,6 +59,8 @@ public class CoolGenerator {
     private String jsDetailContent;
     private String jsForeignKeyContent;
     private String jsDateContent;
+    private String jsPrimaryKeyDoms;
+    private String primaryKeyColumn;
     private String majorColumn;
 
     public void build() throws Exception {
@@ -140,6 +142,8 @@ public class CoolGenerator {
         jsDetailContent = createJsDetailMsg();
         jsForeignKeyContent = createJsFkContent();
         jsDateContent = createJsDateContent();
+        jsPrimaryKeyDoms = createJsPrimaryKeyMsg();
+        primaryKeyColumn = createPrimaryMsg();
         majorColumn = createMajorMsg();
     }
 
@@ -180,7 +184,9 @@ public class CoolGenerator {
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
                     .replaceAll("@\\{JSFOREIGNKEYCONTENT}", jsForeignKeyContent)
                     .replaceAll("@\\{JSDATECONTENT}", jsDateContent)
+                    .replaceAll("@\\{JSPRIMARYKEYDOMS}", jsPrimaryKeyDoms)
                     .replaceAll("@\\{MAJORCOLUMN}", majorColumn)
+                    .replaceAll("@\\{PRIMARYKEYCOLUMN}", GeneratorUtils.firstCharConvert(primaryKeyColumn, false))
                     .replaceAll("@\\{UPCASEMARJORCOLUMN}", GeneratorUtils.firstCharConvert(majorColumn, false))
             ;
             writerFile.createNewFile();
@@ -197,6 +203,8 @@ public class CoolGenerator {
     private void gainDbInfo() throws Exception {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
         Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
+//        Class.forName("com.mysql.jdbc.Driver").newInstance();
+//        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
         this.columns = getSqlServerColumns(conn, table, true);
     }
 
@@ -217,6 +225,7 @@ public class CoolGenerator {
                         GeneratorUtils.getType(meta.getColumnType(i)),
                         resultSet.getString("Comment"),
                         resultSet.getString("Key").equals("PRI"),
+                        false,
                         resultSet.getString("Null").equals("NO"),
                         GeneratorUtils.getColumnLength(resultSet.getString("Type")),
                         init
@@ -238,6 +247,7 @@ public class CoolGenerator {
                 "       'Field'= a.name,\n" +
                 "       'Comment'= isnull(g.[value],''),\n" +
                 "       'Key'= case when COLUMNPROPERTY( a.id,a.name,'IsIdentity')=1 then 'PRI' else '' end,\n" +
+                "       'Main'= case when exists(SELECT 1 FROM sysobjects where xtype='PK' and parent_obj=a.id and name in (SELECT name FROM sysindexes WHERE indid in( SELECT indid FROM sysindexkeys WHERE id = a.id AND colid=a.colid))) then 'PRI' else '' end,"+
                 "       'Type'= b.name,\n" +
                 "       'Length'= COLUMNPROPERTY(a.id,a.name,'PRECISION'),\n" +
                 "       'Decimals'= isnull(COLUMNPROPERTY(a.id,a.name,'Scale'),0),\n" +
@@ -260,6 +270,7 @@ public class CoolGenerator {
                         GeneratorUtils.getType(meta.getColumnType(i)),
                         resultSet.getString("Comment"),
                         resultSet.getString("Key").equals("PRI"),
+                        resultSet.getString("Main").equals("PRI"),
                         resultSet.getString("Null").equals("NO"),
                         GeneratorUtils.getColumnLength(resultSet.getString("Type")),
                         init
@@ -344,7 +355,7 @@ public class CoolGenerator {
                 sb.append("    ")
                         .append("@TableId(value = \"")
                         .append(column.getName())
-                        .append("\", type = IdType.AUTO)")
+                        .append("\", type = IdType.INPUT)")
                         .append("\n");
             }
 
@@ -491,14 +502,24 @@ public class CoolGenerator {
     /*********************************** Controller动态字段 *****************************************/
     /**********************************************************************************************/
 
+    private String createPrimaryMsg(){
+        String defaultMajor = "id";
+        for (Column column: columns){
+            if (column.isPrimaryKey()){
+                defaultMajor = column.getHumpName();
+            }
+        }
+        return defaultMajor;
+    }
+
     private String createMajorMsg(){
         String defaultMajor = "id";
         for (Column column: columns){
             if (column.isPrimaryKey()){
-                defaultMajor = column.getName();
+                defaultMajor = column.getHumpName();
             }
             if (column.isMajor()){
-                return column.getName();
+                return column.getHumpName();
             }
         }
         return defaultMajor;
@@ -558,7 +579,7 @@ public class CoolGenerator {
     private String createHtmlDetailMsg(){
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
-            if (column.isPrimaryKey()){ continue;}
+//            if (column.isPrimaryKey()){ continue;}
             sb.append("        <div class=\"layui-inline\"  style=\"width:");
             if (column.isImage()){
                 sb.append("97%");
@@ -599,6 +620,10 @@ public class CoolGenerator {
                     sb.append("\\$");
                 }
                 sb.append("\" class=\"layui-input\" type=\"text\"");
+                // 主键
+                if (column.isPrimaryKey()){
+                    sb.append(" onkeyup=\"check(this.id)\"");
+                }
                 // 非空判断
                 if (column.isNotNull()){
                     sb.append(" lay-verify=\"required\" ");
@@ -662,7 +687,7 @@ public class CoolGenerator {
     private String createJsTableMsg(){
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
-            if (column.isPrimaryKey()){ continue;}
+//            if (column.isPrimaryKey()){ continue;}
             sb.append("            ,{field: '");
             if ("Date".equals(column.getType()) || !Cools.isEmpty(column.getEnums())){
                 // 时间、枚举  格式化
@@ -691,7 +716,7 @@ public class CoolGenerator {
     private String createJsDetailMsg(){
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
-            if (column.isPrimaryKey()){ continue;}
+//            if (column.isPrimaryKey()){ continue;}
             sb.append("            ")
                     .append(column.getHumpName())
                     .append(": ");
@@ -767,6 +792,19 @@ public class CoolGenerator {
                         .append("        type: 'datetime'\n")
                         .append("    });\n");
             }
+        }
+        return sb.toString();
+    }
+
+    private String createJsPrimaryKeyMsg(){
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns) {
+            if (column.isPrimaryKey()) {
+                sb.append("#").append(column.getHumpName()).append(",");
+            }
+        }
+        if (sb.substring(sb.length() - 1).equals(",")) {
+            sb.deleteCharAt(sb.length()-1);
         }
         return sb.toString();
     }

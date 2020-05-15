@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by vincent on 2019-06-09
@@ -52,4 +54,13 @@ public abstract class AbstractBaseController {
         return map;
     }
 
+    public static String humpToLine(String str) {
+        Matcher matcher = Pattern.compile("[A-Z]").matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
 }

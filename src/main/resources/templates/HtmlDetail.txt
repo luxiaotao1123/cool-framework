@@ -15,18 +15,21 @@
 <!-- 详情 -->
 <div id="data-detail" class="layer_self_wrap">
     <form id="detail" class="layui-form">
+    <!--
         <div class="layui-inline"  style="display: none">
             <label class="layui-form-label"><span class="not-null">*</span>编　　号：</label>
             <div class="layui-input-inline">
                 <input id="id" class="layui-input" type="text" placeholder="编号">
             </div>
         </div>
+    -->
 @{HTMLDETAILCONTENT}
 
         <hr class="layui-bg-gray">
 
         <div id="data-detail-btn" class="layui-btn-container layui-form-item">
-            <div id="data-detail-submit" type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="edit">保存</div>
+            <div id="data-detail-submit-save" type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="save">保存</div>
+            <div id="data-detail-submit-edit" type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="edit">修改</div>
             <div id="data-detail-close" type="button" class="layui-btn" lay-submit lay-filter="close">关闭</div>
         </div>
 

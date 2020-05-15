@@ -17,7 +17,7 @@ layui.use(['table','laydate', 'form'], function(){
         cellMinWidth: 50,
         cols: [[
             {type: 'checkbox', fixed: 'left'}
-            ,{field: 'id', title: 'ID', sort: true,align: 'center', fixed: 'left', width: 80}
+//            ,{field: 'id', title: 'ID', sort: true,align: 'center', fixed: 'left', width: 80}
 @{JSTABLECONTENT}
             ,{fixed: 'right', title:'操作', align: 'center', toolbar: '#operate', width:150}
         ]],
@@ -58,6 +58,7 @@ layui.use(['table','laydate', 'form'], function(){
                     shadeClose: false,
                     content: '@{SIMPLEENTITYNAME}_detail.html',
                     success: function(layero, index){
+                        layer.getChildFrame('#data-detail-submit-edit', index).hide();
                     	clearFormVal(layer.getChildFrame('#detail', index));
                         detailScreen(index);
                     }
@@ -73,18 +74,14 @@ layui.use(['table','laydate', 'form'], function(){
                 break;
             case 'deleteData':
                 var data = checkStatus.data;
-                var ids=[];
-                data.map(function (track) {
-                    ids.push(track.id);
-                });
-                if (ids.length === 0){
+                if (data.length === 0){
                     layer.msg('请选择数据');
                 } else {
-                    layer.confirm('确定删除'+(ids.length===1?'此':ids.length)+'条数据吗', function(){
+                    layer.confirm('确定删除'+(data.length===1?'此':data.length)+'条数据吗', function(){
                         $.ajax({
                             url: "/@{SIMPLEENTITYNAME}/delete/auth",
                             headers: {'token': localStorage.getItem('token')},
-                            data: {ids: ids},
+                            data: {param: JSON.stringify(data)},
                             method: 'POST',
                             traditional:true,
                             success: function (res) {
@@ -158,7 +155,8 @@ layui.use(['table','laydate', 'form'], function(){
                     success: function(layero, index){
                         setFormVal(layer.getChildFrame('#detail', index), data, true);
                         top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);
-                        layer.getChildFrame('#data-detail-submit', index).hide();
+                        layer.getChildFrame('#data-detail-submit-save', index).hide();
+                        layer.getChildFrame('#data-detail-submit-edit', index).hide();
                         detailScreen(index);
                         layero.find('iframe')[0].contentWindow.layui.form.render('select');
                     }
@@ -174,8 +172,10 @@ layui.use(['table','laydate', 'form'], function(){
                     shadeClose: false,
                     content: '@{SIMPLEENTITYNAME}_detail.html',
                     success: function(layero, index){
+                        layer.getChildFrame('#data-detail-submit-save', index).hide();
                         setFormVal(layer.getChildFrame('#detail', index), data, false);
                         top.convertDisabled(layer.getChildFrame('#data-detail :input', index), false);
+                        top.convertDisabled(layer.getChildFrame('@{JSPRIMARYKEYDOMS}', index), true);
                         detailScreen(index);
                         layero.find('iframe')[0].contentWindow.layui.form.render('select');
                     }
@@ -185,17 +185,30 @@ layui.use(['table','laydate', 'form'], function(){
         }
     });
 
+    // 数据保存动作
+    form.on('submit(save)', function () {
+        if (banMsg != null){
+            layer.msg(banMsg);
+            return;
+        }
+        method("add");
+    });
+
     // 数据修改动作
     form.on('submit(edit)', function () {
+        method("update")
+    });
+
+    function method(name){
         var index = layer.load(1, {
             shade: [0.5,'#000'] //0.1透明度的背景
         });
         var data = {
-            id: $('#id').val(),
+//            id: $('#id').val(),
 @{JSDETAILCONTENT}
         };
         $.ajax({
-            url: "/@{SIMPLEENTITYNAME}/edit/auth",
+            url: "/@{SIMPLEENTITYNAME}/"+name+"/auth",
             headers: {'token': localStorage.getItem('token')},
             data: top.reObject(data),
             method: 'POST',
@@ -214,7 +227,7 @@ layui.use(['table','laydate', 'form'], function(){
                 layer.close(index);
             }
         })
-    });
+    }
 
     // 搜索栏搜索事件
     form.on('submit(search)', function (data) {
