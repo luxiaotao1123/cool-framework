@@ -25,6 +25,7 @@ public class Column {
     private boolean notNull; // 非空
     private boolean major; // 主要
     private boolean image; // 图片
+    private boolean checkBox; // 复选框
     private String foreignKey; // 外健实例名(大驼峰,如sys_user ==> User)
     private String foreignKeyMajor; // 外键
     private List<Map<String, Object>> enums; // 枚举值
@@ -71,7 +72,7 @@ public class Column {
                         List<Column> foreignColumns = new ArrayList<>();
                         if (init) {
                             try {
-                                foreignColumns = CoolGenerator.getSqlServerColumns(conn, group, false);
+                                foreignColumns = CoolGenerator.getMysqlColumns(conn, group, false);
                             } catch (Exception e){
                                 e.printStackTrace();
                             }
@@ -100,6 +101,11 @@ public class Column {
             if (comment.endsWith("(img)")){
                 this.comment = comment.substring(0, comment.length()-5);
                 this.image = true;
+            }
+            // 复选框
+            if (comment.endsWith("(checkBox)")){
+                this.comment = comment.substring(0, comment.length()-10);
+                this.checkBox = true;
             }
         }
         if (primaryKey || mainKey){
@@ -218,6 +224,14 @@ public class Column {
 
     public void setImage(final boolean image) {
         this.image = image;
+    }
+
+    public boolean isCheckBox() {
+        return checkBox;
+    }
+
+    public void setCheckBox(boolean checkBox) {
+        this.checkBox = checkBox;
     }
 
     @Override

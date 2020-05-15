@@ -29,7 +29,9 @@
 </div>
 
 <!-- 表格 -->
-<table class="layui-hide" id="@{SIMPLEENTITYNAME}" lay-filter="@{SIMPLEENTITYNAME}"></table>
+<div class="layui-form">
+    <table class="layui-hide" id="@{SIMPLEENTITYNAME}" lay-filter="@{SIMPLEENTITYNAME}"></table>
+</div>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" id="btn-add" lay-event="addData">新增</button>

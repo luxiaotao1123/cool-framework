@@ -201,11 +201,11 @@ public class CoolGenerator {
     }
 
     private void gainDbInfo() throws Exception {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
-        Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
-//        Class.forName("com.mysql.jdbc.Driver").newInstance();
-//        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
-        this.columns = getSqlServerColumns(conn, table, true);
+//        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+//        Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
+        this.columns = getMysqlColumns(conn, table, true);
     }
 
     // mysql
@@ -619,7 +619,13 @@ public class CoolGenerator {
                 if ("Date".equals(column.getType())){
                     sb.append("\\$");
                 }
-                sb.append("\" class=\"layui-input\" type=\"text\"");
+                sb.append("\" class=\"layui-input\" type=");
+                // 复选框
+                if (column.isCheckBox()){
+                    sb.append("\"checkout\" lay-skin=\"primary\" lay-filter='detailCheckbox'");
+                } else {
+                    sb.append("\"text\"");
+                }
                 // 主键
                 if (column.isPrimaryKey()){
                     sb.append(" onkeyup=\"check(this.id, '").append(simpleEntityName).append("')\"");
@@ -700,15 +706,24 @@ public class CoolGenerator {
                     sb.append(column.getHumpName());
                 }
             }
-            sb.append("', align: 'center',title: '")
-                    .append(column.getComment());
+            sb.append("', align: 'center',title: '").append(column.getComment()).append("'");
+            // 复选框
+            if (column.isCheckBox()){
+                sb.append(", templet:function(row){\n")
+                        .append("                    var html = \"<input value='")
+                        .append(column.getHumpName()).append("' type='checkbox' lay-skin='primary' lay-filter='tableCheckbox' table-index='\"+row.LAY_TABLE_INDEX+\"'\";\n")
+                        .append("                    if(row.name === 'Y'){html += \" checked \";}\n")
+                        .append("                    html += \">\";\n")
+                        .append("                    return html;\n")
+                        .append("                }");
+            }
             // 关联表
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append("',event: '")
                         .append(column.getHumpName())
-                        .append("', style: 'text-decoration: underline;cursor:pointer");
+                        .append("', style: 'text-decoration: underline;cursor:pointer'");
             }
-            sb.append("'}\n");
+            sb.append("}\n");
         }
         return sb.toString();
     }
@@ -762,8 +777,9 @@ public class CoolGenerator {
                         .append("                                       setFormVal(layer.getChildFrame('#detail', index), res.data, true);\n")
                         .append("                                       top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);\n")
                         .append("                                       layer.getChildFrame('#data-detail-submit', index).hide();\n")
-                        .append("                                       detailScreen(index);\n")
+                        .append("                                       layer.iframeAuto(index);\n")
                         .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('select');\n")
+                        .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('checkbox');\n")
                         .append("                                   } else if (res.code === 403){\n")
                         .append("                                       parent.location.href = \"/\";\n")
                         .append("                                   }else {\n")
