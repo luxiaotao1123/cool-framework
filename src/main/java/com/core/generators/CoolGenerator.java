@@ -622,7 +622,7 @@ public class CoolGenerator {
                 sb.append("\" class=\"layui-input\" type=\"text\"");
                 // 主键
                 if (column.isPrimaryKey()){
-                    sb.append(" onkeyup=\"check(this.id)\"");
+                    sb.append(" onkeyup=\"check(this.id, '").append(simpleEntityName).append("')\"");
                 }
                 // 非空判断
                 if (column.isNotNull()){
