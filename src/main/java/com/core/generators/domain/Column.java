@@ -21,7 +21,8 @@ public class Column {
     private String type; // 类型
     private String comment; // 备注
     private String humpName; // 小驼峰
-    private boolean primaryKey; // 主键
+    private boolean primaryKey; // 唯一主键
+    private boolean mainKey;  // 普通主键
     private boolean notNull; // 非空
     private boolean major; // 主要
     private boolean image; // 图片
@@ -72,7 +73,7 @@ public class Column {
                         List<Column> foreignColumns = new ArrayList<>();
                         if (init) {
                             try {
-                                foreignColumns = CoolGenerator.getMysqlColumns(conn, group, false);
+                                foreignColumns = CoolGenerator.getSqlServerColumns(conn, group, false);
                             } catch (Exception e){
                                 e.printStackTrace();
                             }
@@ -108,11 +109,13 @@ public class Column {
                 this.checkBox = true;
             }
         }
-        if (primaryKey || mainKey){
-            this.primaryKey = true;
-        } else {
-            this.primaryKey = false;
-        }
+//        if (primaryKey || mainKey){
+//            this.primaryKey = true;
+//        } else {
+//            this.primaryKey = false;
+//        }
+        this.primaryKey = primaryKey;
+        this.mainKey = mainKey;
         this.notNull = notNull;
         this.length = length;
         this.humpName = GeneratorUtils._convert(name);
@@ -163,6 +166,10 @@ public class Column {
     }
 
     public boolean isPrimaryKey() {
+        return primaryKey || mainKey;
+    }
+
+    public boolean isOnly(){
         return primaryKey;
     }
 
@@ -232,6 +239,14 @@ public class Column {
 
     public void setCheckBox(boolean checkBox) {
         this.checkBox = checkBox;
+    }
+
+    public boolean isMainKey() {
+        return mainKey;
+    }
+
+    public void setMainKey(boolean mainKey) {
+        this.mainKey = mainKey;
     }
 
     @Override

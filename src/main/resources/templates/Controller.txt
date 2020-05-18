@@ -27,7 +27,7 @@ public class @{ENTITYNAME}Controller extends BaseController {
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/{id}/auth")
     @ManagerAuth
-    public R get(@PathVariable("id") Long id) {
+    public R get(@PathVariable("id") String id) {
         return R.ok(@{SIMPLEENTITYNAME}Service.selectById(String.valueOf(id)));
     }
 
@@ -55,20 +55,6 @@ public class @{ENTITYNAME}Controller extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/@{SIMPLEENTITYNAME}/edit/auth")
-    @ManagerAuth
-    public R edit(@{ENTITYNAME} @{SIMPLEENTITYNAME}) {
-        if (Cools.isEmpty(@{SIMPLEENTITYNAME})){
-            return R.error();
-        }
-        if (null == @{SIMPLEENTITYNAME}.get@{PRIMARYKEYCOLUMN}()){
-            @{SIMPLEENTITYNAME}Service.insert(@{SIMPLEENTITYNAME});
-        } else {
-            @{SIMPLEENTITYNAME}Service.updateById(@{SIMPLEENTITYNAME});
-        }
-        return R.ok();
-    }
-
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/add/auth")
     @ManagerAuth
     public R add(@{ENTITYNAME} @{SIMPLEENTITYNAME}) {
@@ -77,6 +63,7 @@ public class @{ENTITYNAME}Controller extends BaseController {
     }
 
 	@RequestMapping(value = "/@{SIMPLEENTITYNAME}/update/auth")
+	@ManagerAuth
     public R update(@{ENTITYNAME} @{SIMPLEENTITYNAME}){
         if (Cools.isEmpty(@{SIMPLEENTITYNAME}) || null==@{SIMPLEENTITYNAME}.get@{PRIMARYKEYCOLUMN}()){
             return R.error();

@@ -201,11 +201,11 @@ public class CoolGenerator {
     }
 
     private void gainDbInfo() throws Exception {
-//        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
-//        Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
-        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
-        this.columns = getMysqlColumns(conn, table, true);
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+        Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
+//        Class.forName("com.mysql.jdbc.Driver").newInstance();
+//        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
+        this.columns = getSqlServerColumns(conn, table, true);
     }
 
     // mysql
@@ -352,11 +352,20 @@ public class CoolGenerator {
                             .append("import com.baomidou.mybatisplus.enums.IdType;").append("\n");
                     setTableId = false;
                 }
-                sb.append("    ")
-                        .append("@TableId(value = \"")
-                        .append(column.getName())
-                        .append("\", type = IdType.INPUT)")
-                        .append("\n");
+                if (column.isOnly()){
+                    sb.append("    ")
+                            .append("@TableId(value = \"")
+                            .append(column.getName())
+                            .append("\", type = IdType.AUTO)")
+                            .append("\n");
+                } else {
+                    sb.append("    ")
+                            .append("@TableId(value = \"")
+                            .append(column.getName())
+                            .append("\", type = IdType.INPUT)")
+                            .append("\n");
+                }
+
             }
 
             // 外键修饰
@@ -622,7 +631,7 @@ public class CoolGenerator {
                 sb.append("\" class=\"layui-input\" type=");
                 // 复选框
                 if (column.isCheckBox()){
-                    sb.append("\"checkout\" lay-skin=\"primary\" lay-filter='detailCheckbox'");
+                    sb.append("\"checkBox\" lay-skin=\"primary\" lay-filter='detailCheckbox'");
                 } else {
                     sb.append("\"text\"");
                 }
@@ -631,7 +640,7 @@ public class CoolGenerator {
                     sb.append(" onkeyup=\"check(this.id, '").append(simpleEntityName).append("')\"");
                 }
                 // 非空判断
-                if (column.isNotNull()){
+                if (column.isNotNull() && !column.isPrimaryKey()){
                     sb.append(" lay-verify=\"required\" ");
                 }
                 // 关联外键
@@ -712,14 +721,14 @@ public class CoolGenerator {
                 sb.append(", templet:function(row){\n")
                         .append("                    var html = \"<input value='")
                         .append(column.getHumpName()).append("' type='checkbox' lay-skin='primary' lay-filter='tableCheckbox' table-index='\"+row.LAY_TABLE_INDEX+\"'\";\n")
-                        .append("                    if(row.name === 'Y'){html += \" checked \";}\n")
+                        .append("                    if(row.").append(column.getHumpName()).append(" === 'Y'){html += \" checked \";}\n")
                         .append("                    html += \">\";\n")
                         .append("                    return html;\n")
                         .append("                }");
             }
             // 关联表
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
-                sb.append("',event: '")
+                sb.append(",event: '")
                         .append(column.getHumpName())
                         .append("', style: 'text-decoration: underline;cursor:pointer'");
             }
@@ -776,8 +785,8 @@ public class CoolGenerator {
                         .append("                                   if (res.code === 200){\n")
                         .append("                                       setFormVal(layer.getChildFrame('#detail', index), res.data, true);\n")
                         .append("                                       top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);\n")
-                        .append("                                       layer.getChildFrame('#data-detail-submit', index).hide();\n")
-                        .append("                                       layer.iframeAuto(index);\n")
+                        .append("                                       layer.getChildFrame('#data-detail-submit-save,#data-detail-submit-edit', index).hide();\n")
+                        .append("                                       layer.iframeAuto(index);layer.style(index, {top: ((\\$(window).height()-layer.getChildFrame('#data-detail', index).height())/3)+\"px\"});\n")
                         .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('select');\n")
                         .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('checkbox');\n")
                         .append("                                   } else if (res.code === 403){\n")
