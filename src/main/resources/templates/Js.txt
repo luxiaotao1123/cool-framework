@@ -17,7 +17,7 @@ layui.use(['table','laydate', 'form'], function(){
         toolbar: '#toolbar',
         cellMinWidth: 50,
         cols: [[
-            {type: 'checkbox', fixed: 'left'}
+            {type: 'checkbox'}
 //            ,{field: 'id', title: 'ID', sort: true,align: 'center', fixed: 'left', width: 80}
 @{JSTABLECONTENT}
             ,{fixed: 'right', title:'操作', align: 'center', toolbar: '#operate', width:150}

@@ -543,7 +543,7 @@ public class CoolGenerator {
         for (Column column : columns){
             sb.append("        ")
                     .append("<")
-                    .append(column.isPrimaryKey()?"id":"result")
+                    .append(column.isOnly()?"id":"result")
                     .append(" column=\"")
                     .append(column.getName())
                     .append("\" property=\"")
@@ -777,7 +777,7 @@ public class CoolGenerator {
     private String createJsFkContent(){
         StringBuilder sb = new StringBuilder();
         for (Column column : columns){
-            if (column.isPrimaryKey()){ continue;}
+//            if (column.isPrimaryKey()){ continue;}
             // 如果有关联外健
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append("            case '").append(column.getHumpName()).append("':\n")
@@ -787,7 +787,7 @@ public class CoolGenerator {
                         .append("                } else {\n")
                         .append("                   layer.open({\n")
                         .append("                       type: 2,\n")
-                        .append("                       title: '").append(column.getComment().substring(0, column.getComment().length()-2)).append("详情',\n")
+                        .append("                       title: '").append(column.getComment()).append("详情',\n")
                         .append("                       maxmin: true,\n")
                         .append("                       area: [top.detailWidth, top.detailHeight],\n")
                         .append("                       shadeClose: false,\n")
