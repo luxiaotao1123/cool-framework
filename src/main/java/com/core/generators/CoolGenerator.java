@@ -828,8 +828,10 @@ public class CoolGenerator {
                 sb.append("#").append(column.getHumpName()).append(",");
             }
         }
-        if (sb.substring(sb.length() - 1).equals(",")) {
-            sb.deleteCharAt(sb.length()-1);
+        if (sb.length() > 1){
+            if (sb.substring(sb.length() - 1).equals(",")) {
+                sb.deleteCharAt(sb.length()-1);
+            }
         }
         return sb.toString();
     }
