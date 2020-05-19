@@ -640,8 +640,24 @@ public class CoolGenerator {
                     sb.append(" onkeyup=\"check(this.id, '").append(simpleEntityName).append("')\"");
                 }
                 // 非空判断
-                if (column.isNotNull() && !column.isPrimaryKey()){
-                    sb.append(" lay-verify=\"required\" ");
+                List<String> list = new ArrayList<>();
+                if (column.isNotNull() && !column.isOnly()){
+                    list.add("required");
+//                    sb.append(" lay-verify=\"required\" ");
+                }
+                // 数字判断
+                if ("ShortIntegerLongDouble".contains(column.getType())){
+                    list.add("number");
+                }
+                if (list.size() > 0){
+                    sb.append(" lay-verify=\"");
+                    for (String str : list) {
+                        sb.append(str).append("|");
+                    }
+                    if (sb.substring(sb.length() - 1).equals("|")) {
+                        sb.deleteCharAt(sb.length()-1);
+                    }
+                    sb.append("\" ");
                 }
                 // 关联外键
                 if (!Cools.isEmpty(column.getForeignKeyMajor())){
