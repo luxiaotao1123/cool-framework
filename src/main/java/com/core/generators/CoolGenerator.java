@@ -730,7 +730,7 @@ public class CoolGenerator {
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append(",event: '")
                         .append(column.getHumpName())
-                        .append("', style: 'text-decoration: underline;cursor:pointer'");
+                        .append("', style: 'cursor:pointer'");
             }
             sb.append("}\n");
         }
@@ -785,7 +785,7 @@ public class CoolGenerator {
                         .append("                                   if (res.code === 200){\n")
                         .append("                                       setFormVal(layer.getChildFrame('#detail', index), res.data, true);\n")
                         .append("                                       top.convertDisabled(layer.getChildFrame('#data-detail :input', index), true);\n")
-                        .append("                                       layer.getChildFrame('#data-detail-submit-save,#data-detail-submit-edit', index).hide();\n")
+                        .append("                                       layer.getChildFrame('#data-detail-submit-save,#data-detail-submit-edit,#prompt', index).hide();\n")
                         .append("                                       layer.iframeAuto(index);layer.style(index, {top: ((\\$(window).height()-layer.getChildFrame('#data-detail', index).height())/3)+\"px\"});\n")
                         .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('select');\n")
                         .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('checkbox');\n")
