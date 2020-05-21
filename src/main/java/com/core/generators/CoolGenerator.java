@@ -185,7 +185,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{JSFOREIGNKEYCONTENT}", jsForeignKeyContent)
                     .replaceAll("@\\{JSDATECONTENT}", jsDateContent)
                     .replaceAll("@\\{JSPRIMARYKEYDOMS}", jsPrimaryKeyDoms)
-                    .replaceAll("@\\{MAJORCOLUMN}", majorColumn)
+                    .replaceAll("@\\{MAJORCOLUMN}", GeneratorUtils.humpToLine(majorColumn))
                     .replaceAll("@\\{PRIMARYKEYCOLUMN}", GeneratorUtils.firstCharConvert(primaryKeyColumn, false))
                     .replaceAll("@\\{UPCASEMARJORCOLUMN}", GeneratorUtils.firstCharConvert(majorColumn, false))
             ;
