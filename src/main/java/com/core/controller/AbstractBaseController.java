@@ -50,6 +50,8 @@ public abstract class AbstractBaseController {
         }
         map.entrySet().removeIf(next -> next.getKey().equals("curr")
                 || next.getKey().equals("limit")
+                || next.getKey().equals("orderByField")
+                || next.getKey().equals("orderByType")
                 || Cools.isEmpty(next.getValue()));
         return map;
     }
