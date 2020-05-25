@@ -794,7 +794,7 @@ public class CoolGenerator {
                         .append("                       content: '../").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("_detail.html',\n")
                         .append("                       success: function(layero, index){\n")
                         .append("                           \\$.ajax({\n")
-                        .append("                               url: \"/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/\"+ param").append(" +\"/auth\",\n")
+                        .append("                               url: \"baseUrl+/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/\"+ param").append(" +\"/auth\",\n")
                         .append("                               headers: {'token': localStorage.getItem('token')},\n")
                         .append("                               method: 'GET',\n")
                         .append("                               success: function (res) {\n")

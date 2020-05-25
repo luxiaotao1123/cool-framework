@@ -10,7 +10,7 @@ layui.use(['table','laydate', 'form'], function(){
     tableIns = table.render({
         elem: '#@{SIMPLEENTITYNAME}',
         headers: {token: localStorage.getItem('token')},
-        url: '/@{SIMPLEENTITYNAME}/list/auth',
+        url: baseUrl+'/@{SIMPLEENTITYNAME}/list/auth',
         page: true,
         limit: 16,
         even: true,
@@ -111,7 +111,7 @@ layui.use(['table','laydate', 'form'], function(){
                 } else {
                     layer.confirm('确定删除'+(data.length===1?'此':data.length)+'条数据吗', function(){
                         $.ajax({
-                            url: "/@{SIMPLEENTITYNAME}/delete/auth",
+                            url: baseUrl+"/@{SIMPLEENTITYNAME}/delete/auth",
                             headers: {'token': localStorage.getItem('token')},
                             data: {param: JSON.stringify(data)},
                             method: 'POST',
@@ -149,7 +149,7 @@ layui.use(['table','laydate', 'form'], function(){
                         'fields': fields
                     };
                     $.ajax({
-                        url: "/@{SIMPLEENTITYNAME}/export/auth",
+                        url: baseUrl+"/@{SIMPLEENTITYNAME}/export/auth",
                         headers: {'token': localStorage.getItem('token')},
                         data: JSON.stringify(param),
                         dataType:'json',
@@ -241,7 +241,7 @@ layui.use(['table','laydate', 'form'], function(){
 @{JSDETAILCONTENT}
         };
         $.ajax({
-            url: "/@{SIMPLEENTITYNAME}/"+name+"/auth",
+            url: baseUrl+"/@{SIMPLEENTITYNAME}/"+name+"/auth",
             headers: {'token': localStorage.getItem('token')},
             data: top.reObject(data),
             method: 'POST',
