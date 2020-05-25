@@ -13,6 +13,9 @@ import java.lang.annotation.Target;
 public @interface ManagerAuth {
 	
 	Auth value() default Auth.CHECK;
+
+	// 备注
+	String memo() default "";
 	
 	public enum Auth{
 		//权限检测
