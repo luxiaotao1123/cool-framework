@@ -790,7 +790,7 @@ public class CoolGenerator {
                         .append("                       title: '").append(column.getComment()).append("详情',\n")
                         .append("                       maxmin: true,\n")
                         .append("                       area: [top.detailWidth, top.detailHeight],\n")
-                        .append("                       shadeClose: false,\n")
+                        .append("                       shadeClose: true,\n")
                         .append("                       content: '../").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("/").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("_detail.html',\n")
                         .append("                       success: function(layero, index){\n")
                         .append("                           \\$.ajax({\n")

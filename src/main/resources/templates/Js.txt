@@ -87,7 +87,6 @@ layui.use(['table','laydate', 'form'], function(){
                     title: '新增',
                     maxmin: true,
                     area: [top.detailWidth, top.detailHeight],
-                    shadeClose: false,
                     content: '@{SIMPLEENTITYNAME}_detail.html',
                     success: function(layero, index){
                         layer.getChildFrame('#data-detail-submit-edit', index).hide();
@@ -95,14 +94,6 @@ layui.use(['table','laydate', 'form'], function(){
                         layer.iframeAuto(index);layer.style(index, {top: (($(window).height()-layer.getChildFrame('#data-detail', index).height())/3)+"px"});
                     }
                 });
-                break;
-            case 'refreshData':
-                tableIns.reload({
-                    page: {
-                        curr: pageCurr
-                    }
-                });
-                limit();
                 break;
             case 'deleteData':
                 var data = checkStatus.data;
@@ -182,7 +173,7 @@ layui.use(['table','laydate', 'form'], function(){
                     title: '详情',
                     maxmin: true,
                     area: [top.detailWidth, top.detailHeight],
-                    shadeClose: false,
+                    shadeClose: true,
                     content: '@{SIMPLEENTITYNAME}_detail.html',
                     success: function(layero, index){
                         setFormVal(layer.getChildFrame('#detail', index), data, true);
@@ -201,7 +192,6 @@ layui.use(['table','laydate', 'form'], function(){
                     title: '修改',
                     maxmin: true,
                     area: [top.detailWidth, top.detailHeight],
-                    shadeClose: false,
                     content: '@{SIMPLEENTITYNAME}_detail.html',
                     success: function(layero, index){
                         layer.getChildFrame('#data-detail-submit-save', index).hide();
