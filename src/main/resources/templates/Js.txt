@@ -122,7 +122,7 @@ layui.use(['table','laydate', 'form'], function(){
                 }
                 break;
             case 'exportData':
-                layer.confirm('确定导出Excel吗', function(){
+                layer.confirm('确定导出Excel吗', {shadeClose: true}, function(){
                     var titles=[];
                     var fields=[];
                     obj.config.cols[0].map(function (col) {
