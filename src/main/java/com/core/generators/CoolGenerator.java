@@ -806,7 +806,7 @@ public class CoolGenerator {
                         .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('select');\n")
                         .append("                                       layero.find('iframe')[0].contentWindow.layui.form.render('checkbox');\n")
                         .append("                                   } else if (res.code === 403){\n")
-                        .append("                                       parent.location.href = baseUrl;\n")
+                        .append("                                       top.location.href = baseUrl+\"/\";\n")
                         .append("                                   }else {\n")
                         .append("                                       layer.msg(res.msg)\n")
                         .append("                                   }\n")
