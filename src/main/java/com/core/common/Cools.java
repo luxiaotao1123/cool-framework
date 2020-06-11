@@ -13,6 +13,15 @@ import java.util.Set;
  */
 public class Cools {
 
+    public static boolean isEmpty(Object... objects) {
+        for (Object obj : objects){
+            if (isEmpty(obj)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings("rawtypes")
     public static boolean isEmpty(Object o) {
         if (o == null) {
