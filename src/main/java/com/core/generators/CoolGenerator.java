@@ -402,7 +402,7 @@ public class CoolGenerator {
         // full constructor
         sb.append("    public ").append(fullEntityName).append("(");
         for (Column column : columns){
-            if (column.isPrimaryKey()){ continue;}
+            if (column.isOnly()){ continue;}
             sb.append(column.getType()).append(" ").append(column.getHumpName()).append(",");
         }
         sb.deleteCharAt(sb.length()-1);
