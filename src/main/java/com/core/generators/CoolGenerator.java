@@ -563,12 +563,11 @@ public class CoolGenerator {
             if (column.isPrimaryKey()){ continue;}
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 sb.append("    <div class=\"layui-inline\">\n")
-                        .append("        <label class=\"layui-form-label\">").append(GeneratorUtils.supportHtmlName(column.getComment())).append("：</label>\n")
                         .append("        <div class=\"layui-input-inline cool-auto-complete\">\n")
                         .append("            <input id=\"").append(column.getHumpName()).append("\"")
                         .append(" class=\"layui-input\" name=\"").append(column.getName()).append("\" type=\"text\" placeholder=\"请输入\" autocomplete=\"off\" style=\"display: none\">\n")
                         .append("            <input id=\"").append(column.getHumpName()).append("\\$")
-                        .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"请输入\" onfocus=this.blur()>\n")
+                        .append("\" class=\"layui-input cool-auto-complete-div\" onclick=\"autoShow(this.id)\" type=\"text\" placeholder=\"").append(GeneratorUtils.supportHtmlName(column.getComment())).append("\" onfocus=this.blur()>\n")
                         .append("            <div class=\"cool-auto-complete-window\">\n")
                         .append("                <input class=\"cool-auto-complete-window-input\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query").append("By").append(column.getHumpName()).append("\" onkeyup=\"autoLoad(this.getAttribute('data-key'))\">\n")
                         .append("                <select class=\"cool-auto-complete-window-select\" data-key=\"").append(GeneratorUtils.firstCharConvert(column.getForeignKey())).append("Query").append("By").append(column.getHumpName()).append("Select\" onchange=\"confirmed(this.getAttribute('data-key'))\" multiple=\"multiple\">\n")
