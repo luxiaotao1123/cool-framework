@@ -38,8 +38,8 @@ public class @{ENTITYNAME}Controller extends BaseController {
                   @RequestParam(required = false)String orderByField,
                   @RequestParam(required = false)String orderByType,
                   @RequestParam Map<String, Object> param){
-        excludeTrash(param);
         EntityWrapper<@{ENTITYNAME}> wrapper = new EntityWrapper<>();
+        excludeTrash(param);
         convert(param, wrapper);
         if (!Cools.isEmpty(orderByField)){wrapper.orderBy(humpToLine(orderByField), "asc".equals(orderByType));}
         return R.ok(@{SIMPLEENTITYNAME}Service.selectPage(new Page<>(curr, limit), wrapper));
@@ -90,8 +90,8 @@ public class @{ENTITYNAME}Controller extends BaseController {
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/export/auth")
     @ManagerAuth
     public R export(@RequestBody JSONObject param){
-        List<String> fields = JSONObject.parseArray(param.getJSONArray("fields").toJSONString(), String.class);
         EntityWrapper<@{ENTITYNAME}> wrapper = new EntityWrapper<>();
+        List<String> fields = JSONObject.parseArray(param.getJSONArray("fields").toJSONString(), String.class);
         Map<String, Object> map = excludeTrash(param.getJSONObject("@{SIMPLEENTITYNAME}"));
         convert(map, wrapper);
         List<@{ENTITYNAME}> list = @{SIMPLEENTITYNAME}Service.selectList(wrapper);

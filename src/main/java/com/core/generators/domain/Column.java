@@ -104,7 +104,7 @@ public class Column {
                 this.image = true;
             }
             // 复选框
-            if (comment.endsWith("(checkBox)")){
+            if (comment.endsWith("(checkbox)")){
                 this.comment = comment.substring(0, comment.length()-10);
                 this.checkBox = true;
             }
