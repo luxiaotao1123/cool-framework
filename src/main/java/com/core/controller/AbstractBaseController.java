@@ -52,6 +52,7 @@ public abstract class AbstractBaseController {
                 || next.getKey().equals("limit")
                 || next.getKey().equals("orderByField")
                 || next.getKey().equals("orderByType")
+                || next.getKey().equals("condition")
                 || Cools.isEmpty(next.getValue()));
         return map;
     }
