@@ -415,7 +415,7 @@ public class CoolGenerator {
         // constructor tips
         sb.append("//    ").append(fullEntityName).append(" ").append(simpleEntityName).append(" = new ").append(fullEntityName).append("(\n");
         for (int i = 0; i<columns.size(); i++) {
-            if (columns.get(i).isPrimaryKey()){ continue;}
+            if (columns.get(i).isOnly()){ continue;}
             sb.append("//            null");
             if (i < columns.size()-1){
                 sb.append(",");
