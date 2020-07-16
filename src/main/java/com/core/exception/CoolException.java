@@ -1,6 +1,7 @@
 package com.core.exception;
 
 /**
+ * 框架异常
  * Created by vincent on 2019-09-04
  */
 public class CoolException extends RuntimeException {
