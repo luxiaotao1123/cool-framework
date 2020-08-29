@@ -201,11 +201,11 @@ public class CoolGenerator {
     }
 
     private void gainDbInfo() throws Exception {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
-        Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
-//        Class.forName("com.mysql.jdbc.Driver").newInstance();
-//        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
-        this.columns = getSqlServerColumns(conn, table, true);
+//        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+//        Connection conn = DriverManager.getConnection("jdbc:sqlserver://"+url, username, password);
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Connection conn = DriverManager.getConnection("jdbc:mysql://"+url, username, password);
+        this.columns = getMysqlColumns(conn, table, true);
     }
 
     // mysql
