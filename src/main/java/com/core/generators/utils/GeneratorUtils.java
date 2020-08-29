@@ -103,7 +103,11 @@ public class GeneratorUtils {
         Pattern pattern = Pattern.compile("(?<=\\()(.+?)(?=\\))");
         Matcher matcher = pattern.matcher(typeMsg);
         if (matcher.find()){
-            return Integer.parseInt(matcher.group());
+            String group = matcher.group();
+            if (group.contains(",")) {
+                group = group.split(",")[0];
+            }
+            return Integer.parseInt(group);
         }
         return null;
     }
