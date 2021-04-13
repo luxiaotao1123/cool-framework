@@ -43,7 +43,7 @@ public class CoolGenerator {
     public boolean entity = true;
     public boolean xml = true;
     public boolean html = true;
-    public boolean htmlDetail = true;
+    public boolean htmlDetail = false;
     public boolean js = true;
     public boolean sql = true;
 
@@ -54,6 +54,7 @@ public class CoolGenerator {
     private String entityContent;
     private String xmlContent;
     private String htmlContent;
+    private String htmlDialogContent;
     private String htmlDetailContent;
     private String jsTableContent;
     private String jsDetailContent;
@@ -137,6 +138,7 @@ public class CoolGenerator {
         entityContent = createEntityMsg();
         xmlContent = createXmlMsg();
         htmlContent = createHtmlMsg();
+        htmlDialogContent = createHtmlDialogMsg();
         htmlDetailContent = createHtmlDetailMsg();
         jsTableContent = createJsTableMsg();
         jsDetailContent = createJsDetailMsg();
@@ -179,6 +181,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{COMPANYNAME}",packagePath)
                     .replaceAll("@\\{XMLCONTENT}", xmlContent)
                     .replaceAll("@\\{HTMLCONTENT}", htmlContent)
+                    .replaceAll("@\\{HTMLDIALOGCONTENT}", htmlDialogContent)
                     .replaceAll("@\\{HTMLDETAILCONTENT}", htmlDetailContent)
                     .replaceAll("@\\{JSTABLECONTENT}", jsTableContent)
                     .replaceAll("@\\{JSDETAILCONTENT}", jsDetailContent)
@@ -187,6 +190,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{JSPRIMARYKEYDOMS}", jsPrimaryKeyDoms)
                     .replaceAll("@\\{MAJORCOLUMN}", GeneratorUtils.humpToLine(majorColumn))
                     .replaceAll("@\\{PRIMARYKEYCOLUMN}", GeneratorUtils.firstCharConvert(primaryKeyColumn, false))
+                    .replaceAll("@\\{PRIMARYKEYCOLUMN0}", GeneratorUtils.firstCharConvert(primaryKeyColumn, true))
                     .replaceAll("@\\{UPCASEMARJORCOLUMN}", GeneratorUtils.firstCharConvert(majorColumn, false))
             ;
             writerFile.createNewFile();
@@ -576,6 +580,52 @@ public class CoolGenerator {
                         .append("        </div>\n")
                         .append("    </div>\n");
             }
+        }
+        return sb.toString();
+    }
+
+    private String createHtmlDialogMsg() {
+        StringBuilder sb = new StringBuilder();
+        for (Column column : columns){
+            if (column.isPrimaryKey()) {
+                continue;
+            }
+            sb.append("                <div class=\"layui-form-item\">\n");
+            sb.append("                    <label class=\"layui-form-label");
+            if (column.isNotNull()){
+                sb.append(" layui-form-required");
+            }
+            sb.append("\">").append(column.getComment()).append(": </label>\n");
+            sb.append("                    <div class=\"layui-input-block\">\n");
+            // 输入框类型
+            if (Cools.isEmpty(column.getEnums())){
+                sb.append("                        <input class=\"layui-input\" name=\"").append(column.getHumpName()).append("\" placeholder=\"请输入").append(column.getComment()).append("\"");
+                if (column.isNotNull()){
+                    sb.append(" lay-vertype=\"tips\" lay-verify=\"required\"");
+                }
+                sb.append(">\n");
+            // 枚举类型
+            } else {
+                sb.append("                        <select name=\"").append(column.getHumpName()).append("\"");
+                if (column.isNotNull()){
+                    sb.append(" lay-vertype=\"tips\" lay-verify=\"required\"");
+                }
+                sb.append(">\n");
+                sb.append("                            <option value=\"\">").append("请选择").append(column.getComment()).append("</option>\n");
+                for (Map<String, Object> map : column.getEnums()){
+                    for (Map.Entry<String, Object> entry : map.entrySet()){
+                        sb.append("                            <option value=\"")
+                                .append(entry.getKey())
+                                .append("\">")
+                                .append(entry.getValue())
+                                .append("</option>\n");
+                    }
+                }
+                sb.append("                        </select>\n");
+            }
+
+            sb.append("                    </div>\n");
+            sb.append("                </div>\n");
         }
         return sb.toString();
     }

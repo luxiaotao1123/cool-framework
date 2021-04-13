@@ -165,8 +165,12 @@ public class Column {
         return humpName;
     }
 
+//    public boolean isPrimaryKey() {
+//        return primaryKey || mainKey;
+//    }
+
     public boolean isPrimaryKey() {
-        return primaryKey || mainKey;
+        return primaryKey;
     }
 
     public boolean isOnly(){
