@@ -64,7 +64,7 @@ layui.config({
 
     // 监听头工具栏事件
     table.on('toolbar(@{SIMPLEENTITYNAME})', function (obj) {
-        var checkStatus = table.checkStatus(obj.config.id);
+        var checkStatus = table.checkStatus(obj.config.id).data;
         switch(obj.event) {
             case 'addData':
                 showEditModel();
@@ -142,6 +142,7 @@ layui.config({
             title: (mData ? '修改' : '添加') + '订单状态',
             content: $('#editDialog').html(),
             success: function (layero, dIndex) {
+                layDateRender();
                 form.val('detail', mData);
                 form.on('submit(editSubmit)', function (data) {
                     var loadIndex = layer.load(2);
@@ -213,7 +214,10 @@ layui.config({
     });
 
     // 时间选择器
-@{JSDATECONTENT}
+    function layDateRender() {
+    @{JSDATECONTENT}
+    }
+    layDateRender();
 
 });
 

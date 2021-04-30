@@ -12,7 +12,7 @@ import com.core.annotations.ManagerAuth;
 import com.core.common.BaseRes;
 import com.core.common.Cools;
 import com.core.common.R;
-import com.core.controller.AbstractBaseController;
+import @{SYSTEMPACKAGE}.common.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,13 +76,9 @@ public class @{ENTITYNAME}Controller extends BaseController {
 
     @RequestMapping(value = "/@{SIMPLEENTITYNAME}/delete/auth")
     @ManagerAuth
-    public R delete(@RequestParam String param){
-        List<@{ENTITYNAME}> list = JSONArray.parseArray(param, @{ENTITYNAME}.class);
-        if (Cools.isEmpty(list)){
-            return R.error();
-        }
-        for (@{ENTITYNAME} entity : list){
-            @{SIMPLEENTITYNAME}Service.delete(new EntityWrapper<>(entity));
+    public R delete(@RequestParam(value="ids[]") Long[] ids){
+         for (Long id : ids){
+            @{SIMPLEENTITYNAME}Service.deleteById(id);
         }
         return R.ok();
     }

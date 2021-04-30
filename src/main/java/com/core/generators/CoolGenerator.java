@@ -63,6 +63,8 @@ public class CoolGenerator {
     private String jsPrimaryKeyDoms;
     private String primaryKeyColumn;
     private String majorColumn;
+    private String systemPackagePath;
+    private String systemPackage;
 
     public void build() throws Exception {
         init();
@@ -147,6 +149,19 @@ public class CoolGenerator {
         jsPrimaryKeyDoms = createJsPrimaryKeyMsg();
         primaryKeyColumn = createPrimaryMsg();
         majorColumn = createMajorMsg();
+        systemPackagePath = packagePath.replaceAll("manager", "system");
+        String[] split = systemPackagePath.split("\\.");
+        systemPackage = "";
+        for (int i = 1;i <= split.length; i++) {
+            if (i != split.length) {
+                if (i == split.length - 1) {
+                    systemPackage = systemPackage + split[i-1];
+                } else {
+                    systemPackage = systemPackage + split[i-1] + ".";
+                }
+            }
+
+        }
     }
 
     private String readFile(String template){
@@ -192,6 +207,7 @@ public class CoolGenerator {
                     .replaceAll("@\\{PRIMARYKEYCOLUMN}", GeneratorUtils.firstCharConvert(primaryKeyColumn, false))
                     .replaceAll("@\\{PRIMARYKEYCOLUMN0}", GeneratorUtils.firstCharConvert(primaryKeyColumn, true))
                     .replaceAll("@\\{UPCASEMARJORCOLUMN}", GeneratorUtils.firstCharConvert(majorColumn, false))
+                    .replaceAll("@\\{SYSTEMPACKAGE}",systemPackage)
             ;
             writerFile.createNewFile();
             BufferedWriter writer=new BufferedWriter(new FileWriter(writerFile));
@@ -319,6 +335,9 @@ public class CoolGenerator {
     /**********************************************************************************************/
 
     private String createEntityMsg(){
+        if (Cools.isEmpty(systemPackagePath)) {
+            systemPackagePath = packagePath.replaceAll("manager", "system");
+        }
         if (columns.isEmpty()){
             return null;
         }
@@ -326,6 +345,7 @@ public class CoolGenerator {
         StringBuilder entityIm = new StringBuilder("import com.core.common.Cools;");
         boolean setTableField = true;
         boolean setTableId = true;
+        boolean setDateTimeFormat = true;
         for (Column column : columns){
             if (column.getType().equals("Date")){
                 entityIm.append("import java.text.SimpleDateFormat;\n")
@@ -350,7 +370,7 @@ public class CoolGenerator {
 
 
             // 主键修饰
-            if (column.isPrimaryKey()){
+            if (column.isMainKey()){
                 if (setTableId){
                     entityIm.append("import com.baomidou.mybatisplus.annotations.TableId;").append("\n")
                             .append("import com.baomidou.mybatisplus.enums.IdType;").append("\n");
@@ -375,7 +395,8 @@ public class CoolGenerator {
             // 外键修饰
             if (!Cools.isEmpty(column.getForeignKeyMajor())){
                 entityIm.append("import com.core.common.SpringUtils;\n")
-                        .append("import ").append(packagePath).append(".service.").append(column.getForeignKey()).append("Service;\n");
+                        .append("import ").append(column.getForeignKey().equals("User")?systemPackagePath:packagePath).append(".service.").append(column.getForeignKey()).append("Service;\n")
+                        .append("import ").append(column.getForeignKey().equals("User")?systemPackagePath:packagePath).append(".entity.").append(column.getForeignKey()).append(";\n");
             }
 
             // 命名转换注解
@@ -388,6 +409,16 @@ public class CoolGenerator {
                         .append("@TableField(\"")
                         .append(column.getName())
                         .append("\")")
+                        .append("\n");
+            }
+
+            if ("Date".equals(column.getType())){
+                if (setDateTimeFormat){
+                    entityIm.append("import org.springframework.format.annotation.DateTimeFormat;").append("\n");
+                    setDateTimeFormat = false;
+                }
+                sb.append("    ")
+                        .append("@DateTimeFormat(pattern=\"yyyy-MM-dd HH:mm:ss\")")
                         .append("\n");
             }
 
@@ -517,9 +548,18 @@ public class CoolGenerator {
 
     private String createPrimaryMsg(){
         String defaultMajor = "id";
+        boolean havePrimary = false;
         for (Column column: columns){
             if (column.isPrimaryKey()){
                 defaultMajor = column.getHumpName();
+                havePrimary = true;
+            }
+        }
+        if (!havePrimary) {
+            for (Column column: columns){
+                if (column.isMainKey()){
+                    defaultMajor = column.getHumpName();
+                }
             }
         }
         return defaultMajor;
@@ -599,7 +639,11 @@ public class CoolGenerator {
             sb.append("                    <div class=\"layui-input-block\">\n");
             // 输入框类型
             if (Cools.isEmpty(column.getEnums())){
-                sb.append("                        <input class=\"layui-input\" name=\"").append(column.getHumpName()).append("\" placeholder=\"请输入").append(column.getComment()).append("\"");
+                sb.append("                        <input class=\"layui-input\" name=\"").append(column.getHumpName());
+                if ("Date".equals(column.getType())){
+                    sb.append("\" id=\"").append(column.getHumpName()).append("\\$");
+                }
+                sb.append("\" placeholder=\"请输入").append(column.getComment()).append("\"");
                 if (column.isNotNull()){
                     sb.append(" lay-vertype=\"tips\" lay-verify=\"required\"");
                 }
@@ -877,7 +921,7 @@ public class CoolGenerator {
                 continue;
             }
             if ("Date".equals(column.getType())){
-                sb.append("    layDate.render({\n")
+                sb.append("        layDate.render({\n")
                         .append("        elem: '#").append(column.getHumpName()).append("\\\\\\\\\\$',\n")
                         .append("        type: 'datetime'\n")
                         .append("    });\n");
